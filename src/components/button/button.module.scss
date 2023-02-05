@@ -1,0 +1,55 @@
+$success: #5ccb5f;
+$danger: #ab0d2f;
+$primary: #0979b0;
+$transition: all .4s ease-in-out;
+
+.button{
+  width: 95%;
+  margin: 0 0 0 2.5%;
+  padding: 27px;
+  border: none;
+  outline: none;
+  font-size: 17px;
+  transition: $transition;
+  background: transparent;
+  cursor: pointer;
+  border: 2px solid;
+
+  &:hover{
+    color: white; 
+    border: none;
+    border-radius: 5px;
+    
+  }
+
+}
+
+.success{
+  color: $success;
+  border-color: $success;
+
+  &:hover{
+    background: $success;
+    box-shadow: 0px 0px 5px 5px rgba($success, 0.6);
+  }
+}
+
+.primary{
+  color: $primary;
+  border-color: $primary;
+
+  &:hover{
+    background: $primary;
+    box-shadow: 0px 0px 5px 5px rgba($primary, 0.6);
+  }
+}
+
+.danger{
+  color: $danger;
+  border-color: $danger;
+
+  &:hover{
+    background: $danger;
+    box-shadow: 0px 0px 5px 5px rgba($danger, 0.6);
+  }
+}

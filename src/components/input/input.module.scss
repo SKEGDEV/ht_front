@@ -1,0 +1,102 @@
+// Variables
+$bg_color: #efefef;
+$contrast_bg: #5ccb5f;
+$letter_color: #377d6a;
+$transition: all 0.5s ease-in-out;
+
+.input_container {
+	width: 95%;
+	margin: 10px 0 0 2.5%;
+
+	.slide_up {
+		width: 95%;
+		font-size: 16px;
+		display: inline-block;
+		width: 100%;
+		color: $letter_color;
+		background: $bg_color;
+		padding: 10px 0 10px 15px;
+		border: 0;
+		border-radius: 5px;
+		outline: 0;
+		transition: $transition;
+
+		&::placeholder {
+			color: transparent;
+			transition: $transition;
+		}
+
+		+ label {
+			display: inline-block;
+			margin: 0px 0 0 0;
+			transform: translateY(-40px);
+			top: 0;
+			left: 0;
+			padding: 10px 15px;
+			color: white;
+			text-shadow: 0 1px 0 rgba(19, 74, 70, 0.4);
+			transition: $transition;
+			border-top-left-radius: 5px;
+			border-bottom-left-radius: 5px;
+			overflow: hidden;
+
+			&:before,
+			&:after {
+				content: "";
+				position: absolute;
+				right: 0;
+				left: 0;
+				z-index: -1;
+				transition: $transition;
+			}
+
+			&:before {
+				top: 6px;
+				left: 5px;
+				right: 5px;
+				bottom: 6px;
+				background: $contrast_bg;
+			}
+
+			&:after {
+				background: $contrast_bg;
+				top: 0;
+				bottom: 0;
+			}
+		}
+	}
+}
+
+span:nth-child(1) .slide_up {
+	//text-indent: 105px;
+}
+span:nth-child(3) .slide_up {
+	text-indent: 125px;
+}
+span:nth-child(1) .slide_up:focus,
+span:nth-child(1) .slide_up:active,
+span:nth-child(3) .slide_up:focus,
+span:nth-child(3) .slide_up:active {
+	text-indent: 0;
+}
+.slide_up:focus,
+.slide_up:active,
+.slide_up:not(:placeholder-shown) {
+	color: black;
+	text-indent: 0;
+	background: $bg_color;
+
+	&::placeholder {
+		color: gray;
+	}
+	+ label {
+		transform: translateY(-80px);
+
+		&:before {
+			border-radius: 5px;
+		}
+		&:after {
+			transform: translateY(100%);
+		}
+	}
+}
