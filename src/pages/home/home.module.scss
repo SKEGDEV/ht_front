@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+
+@mixin container {
+  width: 99%;
+  height: 98%;
+  margin: 0.5% 0 0 0.5%;
+  background: rgba(0, 0, 0, 0.58); 
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(13.8px);
+  -webkit-backdrop-filter: blur(13.8px);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.container{
+  @include container();
+  
+  .card_container{
+    width: 90%;
+    height: 90%;
+    margin: 5% 0 0 5%;
+    display: flex; 
+    flex-wrap: wrap;
+
+    .card{
+      width: 20%;
+      height: 250px;
+      margin-right: 40px;
+      border-radius: 10px;
+      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.7);
+      background-color: #FFFF99;
+      transform: rotate(-5deg);
+      display: flex;
+      flex-direction: column;
+      transition: all .3s ease-in-out;
+      &:hover{
+	transform: rotate(0deg);
+	transform: scale(1.05);
+      }
+    }
+    h2{
+      font-family: 'Dancing Script', cursive;
+      color: black;
+      text-align: center;
+      width: 40%;
+      margin: 40px 0 20px 30%;
+    }
+  }
+}

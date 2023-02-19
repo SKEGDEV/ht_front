@@ -53,3 +53,15 @@ $transition: all .4s ease-in-out;
     box-shadow: 0px 0px 5px 5px rgba($danger, 0.6);
   }
 }
+
+.logout{
+  padding: 15px;
+  color: $danger;
+  border-color: $danger;
+
+  &:hover{
+    background: $danger;
+    box-shadow: 0px 0px 5px 5px rgba($danger, 0.6);
+  }
+
+}

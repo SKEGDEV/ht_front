@@ -27,23 +27,23 @@ $transition: all .5s ease-in-out;
 
 .login_container{
   width: 85%;
-  height: 600px;
-  margin: 5% 0 50px 7.5%;
+  height: 670px;
+  margin: 5% 0 0 7.5%;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.7); 
   border-radius: 5px;
   display: flex;
   flex-direction: row; 
   overflow: hidden; 
   transition: $transition;
-}
+
 
 .left_slider{
   width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;  
+  height: 100%;  
   @include glassmorfism; 
-
+  overflow: hidden;
+  padding: 25px 0 30px 0;
+  
   img{
     width: 40%;
     margin: 40px 0 40px 30%;
@@ -56,31 +56,47 @@ $transition: all .5s ease-in-out;
     margin: 0 0 0 2.5%;
   }
 
-  .input_container{
+  .input_container{ 
     margin: 0 0 0 1.5%;
     width: 97%;
   }
-  
-  .left{
-    width: 0%;
-    height: 100%;
-    overflow: hidden; 
-    transition: $transition;
-  };
+    .third{
+      margin-left: -200%;
+    }
+    .second{
+      margin-left: -100%;
+    }
+    .first{
+      margin-left: 0%;
+    }
+  .slider_form{
+    width: 300%;
+    display: flex;
+    flex-direction: row;
+    transition: $transition; 
+    
+    .form{
+      width: 100%; 
+     
+      h1{
+	text-align: center;
+	color: white;
+      }
+      .restore{
+	margin-top: 40px;
+	text-align: center;
+	a{
+	  color: white;
+	  transition: $transition;
+	  &:hover{
+	    color: aqua;
+	  }
+	}
+      }
+    }
 
-  .right{
-    width: 0%;
-    height: 100%;
-    overflow: hidden; 
-    padding-top: 30px;
-    transition: $transition;
-  }
-
-  .expand{
-    width: 100%;
-    //height: 100%;
-  }
-
+  } 
+}
 }
 
 .right_slider{
@@ -118,7 +134,7 @@ $transition: all .5s ease-in-out;
 
       li{
 	font-family:'Rubik Marker Hatch', cursive;
-	margin-left: 13px;
+	margin-left: 15px;
       }
     }
 
@@ -139,15 +155,6 @@ $transition: all .5s ease-in-out;
   }
 
 }
-
-.lg_expand{
-  height: 1050px; 
-
-  .slider h2{
-    margin-top: 140px;
-  }
-}
-
 
 @media only screen and (max-width: 950px){
   .login_container{

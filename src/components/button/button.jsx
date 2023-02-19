@@ -3,17 +3,23 @@ import { useState, useEffect } from "react";
 
 export default function Button(props) {
 	const [btn_type, setBtn_type] = useState(styles.primary);
+	const { type, press_btn, text } = props;
+	const { danger, success, logout, primary, button } = styles;
 
 	const get_btn_type = () => {
-		if (props.type == "danger") {
-			setBtn_type(styles.danger);
+		if (type == "danger") {
+			setBtn_type(danger);
 			return;
 		}
 		if (props.type == "success") {
-			setBtn_type(styles.success);
+			setBtn_type(success);
 			return;
 		}
-		setBtn_type(styles.primary);
+		if (props.type == "logout") {
+			setBtn_type(logout);
+			return;
+		}
+		setBtn_type(primary);
 	};
 
 	useEffect(() => {
@@ -21,11 +27,8 @@ export default function Button(props) {
 	}, []);
 
 	return (
-		<button
-			className={styles.button + " " + btn_type}
-			onClick={props.press_btn}
-		>
-			{props.text}
+		<button className={button + " " + btn_type} onClick={press_btn}>
+			{text}
 		</button>
 	);
 }

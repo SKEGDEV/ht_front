@@ -8,107 +8,136 @@ import instagram_icon from "../../img/instagram_icon.svg";
 import whatsapp_icon from "../../img/whatsapp_icon.svg";
 
 export default function Login() {
-	const [left, setLeft] = useState(styles.expand);
-	const [right, setRight] = useState(styles.none);
-	const [lg_expand, setLgExpand] = useState(styles.none);
+	const [form_no, setForm_no] = useState(styles.first);
 
 	const change_form = (form_No) => {
-		window.scrollTo(0, 0);
 		if (form_No === 1) {
-			setLeft(styles.none);
-			setRight(styles.expand);
-			setLgExpand(styles.lg_expand);
+			setForm_no(styles.first);
 			return;
 		}
-		setLeft(styles.expand);
-		setRight(styles.none);
-		setLgExpand(styles.none);
+		if (form_No === 2) {
+			setForm_no(styles.second);
+			return;
+		}
+		setForm_no(styles.third);
 	};
 
 	return (
-		<div className={styles.login_container + " " + lg_expand}>
+		<div className={styles.login_container}>
 			<div className={styles.left_slider}>
-				<div className={styles.left + " " + left}>
-					<img src={logo_1} />
-					<div className={styles.input_container}>
-						<Input
-							lblText="Nombre de usuario"
-							placeholder="Ingrese su nombre de usuario"
-							type="text"
-						/>
-						<Input
-							lblText="Contraseña"
-							placeholder="Ingrese su contraseña"
-							type="password"
-						/>
+				<div className={styles.slider_form + " " + form_no}>
+					<div className={styles.form}>
+						<img src={logo_1} />
+						<div className={styles.input_container}>
+							<Input
+								lblText="Nombre de usuario"
+								placeholder="Ingrese su nombre de usuario"
+								type="text"
+							/>
+							<Input
+								lblText="Contraseña"
+								placeholder="Ingrese su contraseña"
+								type="password"
+							/>
+						</div>
+						<div className={styles.btn_container}>
+							<Button
+								text="Crear cuenta"
+								press_btn={() => {
+									change_form(2);
+								}}
+							/>
+							<Button text="Iniciar sesion" type="success" />
+						</div>
+						<div className={styles.restore}>
+							<a href="#">Olvido su contraseña?</a>
+						</div>
 					</div>
-					<div className={styles.btn_container}>
-						<Button
-							text="Crear cuenta"
-							press_btn={() => {
-								change_form(1);
-							}}
-						/>
-						<Button text="Iniciar sesion" type="success" />
+					<div className={styles.form}>
+						<br />
+						<h1>Informacion personal</h1>
+						<br />
+						<div className={styles.input_container}>
+							<Input
+								lblText="Nombres"
+								placeholder="Ingrese su/sus nombre/s"
+								type="text"
+							/>
+							<Input
+								lblText="Apellidos"
+								placeholder="Ingrese sus apellidos"
+								type="text"
+							/>
+							<Input
+								lblText="Nacimiento"
+								placeholder="Ingrese su fecha de nacimiento"
+								type="date"
+							/>
+							<Input
+								lblText="Documento ID"
+								placeholder="Ingrese su numero de DPI/NIT"
+								type="text"
+							/>
+						</div>
+						<div className={styles.btn_container}>
+							<Button
+								text="Cancelar"
+								type="danger"
+								press_btn={() => {
+									change_form(1);
+								}}
+							/>
+							<Button
+								text="Siguiente"
+								type="success"
+								press_btn={() => {
+									change_form(3);
+								}}
+							/>
+						</div>
 					</div>
-				</div>
-				<div className={styles.right + " " + right}>
-					<div className={styles.input_container}>
-						<Input
-							lblText="Nombres"
-							placeholder="Ingrese su/sus nombre/s"
-							type="text"
-						/>
-						<Input
-							lblText="Apellidos"
-							placeholder="Ingrese sus apellidos"
-							type="text"
-						/>
-						<Input
-							lblText="Nacimiento"
-							placeholder="Ingrese su fecha de nacimiento"
-							type="date"
-						/>
-						<Input
-							lblText="Documento ID"
-							placeholder="Ingrese su numero de DPI/NIT"
-							type="text"
-						/>
-						<Input
-							lblText="Email"
-							placeholder="Ingrese su direccion de correo electronico"
-							type="email"
-						/>
-						<Input
-							lblText="Telefono"
-							placeholder="Ingrese su numero telefonico"
-							type="number"
-						/>
-						<Input
-							lblText="Nombre usuario"
-							placeholder="Ingrese su nombre de usuario"
-							type="text"
-						/>
-						<Input
-							lblText="Contraseña"
-							placeholder="Ingrese su contraseña"
-							type="password"
-						/>
-						<Input
-							lblText="Confirmar contraseña"
-							placeholder="Por favor confirme su contraseña"
-							type="password"
-						/>
-					</div>
-					<div className={styles.btn_container}>
-						<Button
-							text="Regresar"
-							type="danger"
-							press_btn={() => {
-								change_form(2);
-							}}
-						/>
-						<Button text="Crear Cuenta" type="success" />
+					<div className={styles.form}>
+						<br />
+						<h1>Contacto y sesion</h1>
+						<br />
+
+						<div className={styles.input_container}>
+							<Input
+								lblText="Email"
+								placeholder="Ingrese su direccion de correo electronico"
+								type="email"
+							/>
+							<Input
+								lblText="Telefono"
+								placeholder="Ingrese su numero telefonico"
+								type="number"
+							/>
+							<Input
+								lblText="Nombre usuario"
+								placeholder="Ingrese su nombre de usuario"
+								type="text"
+							/>
+							<Input
+								lblText="Contraseña"
+								placeholder="Ingrese su contraseña"
+								type="password"
+							/>
+							<Input
+								lblText="Confirmar contraseña"
+								placeholder="Por favor confirme su contraseña"
+								type="password"
+							/>
+						</div>
+						<div className={styles.btn_container}>
+							<Button
+								text="Regresar"
+								type="danger"
+								press_btn={() => {
+									change_form(2);
+								}}
+							/>
+							<Button text="Crear Cuenta" type="success" />
+						</div>
 					</div>
 				</div>
 			</div>

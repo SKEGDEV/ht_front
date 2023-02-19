@@ -1,11 +1,14 @@
 import './App.scss'
-import Login from './pages/login/login.jsx';
+import Page_router from './pages/router/routes.jsx';
+import {BrowserRouter} from 'react-router-dom';
 
 function App() {
   return (
+    <BrowserRouter>
     <div className="app">
-      <Login/>
+     <Page_router/>
     </div>
+    </BrowserRouter>
   );
 }
 

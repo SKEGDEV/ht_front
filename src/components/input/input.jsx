@@ -1,15 +1,13 @@
-import style from "./input.module.scss";
+import styles from "./input.module.scss";
 
 export default function Input(props) {
+	const { input_container, slide_up } = styles;
+	const { type, placeholder, lblText } = props;
 	return (
-		<div className={style.input_container}>
+		<div className={input_container}>
 			<span>
-				<input
-					className={style.slide_up}
-					type={props.type}
-					placeholder={props.placeholder}
-				/>
-				<label>{props.lblText}</label>
+				<input className={slide_up} type={type} placeholder={placeholder} />
+				<label>{lblText}</label>
 			</span>
 		</div>
 	);
