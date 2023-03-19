@@ -1,186 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik+Marker+Hatch&display=swap');
-$transition: all .5s ease-in-out;
 
-@keyframes slide{
-  0%{margin-left: 0;}
-  20%{margin-left: 0;}
+$top_bg:#5ccb5f;
 
-  25%{margin-left: -100%;}
-  45%{margin-left: -100%;}
-
-  50%{margin-left: -200%;}
-  70%{margin-left: -200%;}
-
-  75%{margin-left: -300%;}
-  100%{margin-left: -300%;}
-
-}
-
-@mixin glassmorfism {
-  background: rgba(0, 0, 0, 0.58); 
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(13.8px);
-  -webkit-backdrop-filter: blur(13.8px);
-  border: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-
-.login_container{
-  width: 85%;
-  height: 670px;
-  margin: 5% 0 0 7.5%;
-  box-shadow: 0px 0px 20px rgba(0,0,0,0.7); 
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row; 
-  overflow: hidden; 
-  transition: $transition;
-
-
-.left_slider{
-  width: 50%;
-  height: 100%;  
-  @include glassmorfism; 
-  overflow: hidden;
-  padding: 25px 0 30px 0;
-  
+.login{
+  overflow:hidden;
+  .top_lg{
+    background-color: $top_bg;
+    margin: 0 0 38px 0; 
+    border-bottom-left-radius: 80px;
+    border-bottom-right-radius: 80px;
+    text-align: center;
+  }
+  .lg_form{
+    width: 94%;
+    margin: 0 0 0 1%; 
+  }
   img{
-    width: 40%;
-    margin: 40px 0 40px 30%;
+    width:80%;
+    margin:40px 0 20px 0;
   }
-
-  .btn_container{
-    width: 95%;
-    display: flex;
-    flex-direction: row;  
-    margin: 0 0 0 2.5%;
+  a{
+    float: right;
+    margin:0 0 25px 0;
   }
-
-  .input_container{ 
-    margin: 0 0 0 1.5%;
-    width: 97%;
-  }
-    .third{
-      margin-left: -200%;
-    }
-    .second{
-      margin-left: -100%;
-    }
-    .first{
-      margin-left: 0%;
-    }
-  .slider_form{
-    width: 300%;
+  .signup_btn, .signin_btn{
     display: flex;
     flex-direction: row;
-    transition: $transition; 
-    
-    .form{
-      width: 100%; 
-     
-      h1{
-	text-align: center;
-	color: white;
-      }
-      .restore{
-	margin-top: 40px;
-	text-align: center;
-	a{
-	  color: white;
-	  transition: $transition;
-	  &:hover{
-	    color: aqua;
-	  }
-	}
-      }
-    }
-
-  } 
-}
-}
-
-.right_slider{
-  width: 50%;
-  height: 100%;
-  background-image:  url('../../img/lg_banner_bg.jpg');
-  background-size: 100% 100%;   
-  overflow: hidden;
-
-  .slider{
-    width: 400%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    animation: slide 25s infinite alternate linear;
-    
-
-    .section{
-      width: 100%;
-      height: 100%;
-      text-align: center;
-    }
-
-    h2{
-      margin-top: 85px;
-      color: white; 
-      font-family:'Rubik Marker Hatch', cursive;
-    }
-    p{
-      width: 76%;
-      margin:5px 0 0 11.5%;
-      color: white; 
-      text-align: justify;
-      font-family:'Rubik Marker Hatch', cursive;
-
-      li{
-	font-family:'Rubik Marker Hatch', cursive;
-	margin-left: 15px;
-      }
-    }
-
-    .contact_container{
-      margin: 40px 0 0 0;
-      img{
-	width: 60px;
-	height: 60px;
-	transition: $transition;
-	margin-left: 20px;
-	cursor: pointer;
-	&:hover{
-	  box-shadow: 0 0 10px 10px rgba(0,0,0,0.7);
-	  border-radius: 10px;
-	}
-      }
+    width: 100%;
+    p{ 
+     margin: 40px 0 40px 17%;
+     span{
+      font-weight: bold;
+      cursor: pointer;
+     }
+     a{
+       text-decoration: none;
+       color: black;
+     }
     }
   }
-
-}
-
-@media only screen and (max-width: 950px){
-  .login_container{
-    width: 98%;
-    margin: 15% 0 47% 1%;
-
-    .left_slider{
-      width: 100%;
-      height: 100%;
-
-      .input_container{
-	width: 100%;
-	margin: 0 0 0 -2%;
-      }
-
-      .btn_container{
-	width: 100%;
-	margin: 0 0 0 -2%;
-      }
-    }
-
-    .right_slider{
-      width: 0%;
-      height: 0%;
-      overflow: hidden;
-    }
+  p{
+    text-align: center;
+    margin: 25px 0 25px 0;
+  }
+  select{
+    width: 103%;
+    margin: 0 0 30px 0;
+    padding: 15px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.2);
   }
 }
-
