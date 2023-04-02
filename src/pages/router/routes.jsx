@@ -5,7 +5,6 @@ import Not_found from "../not_found/not_found.jsx";
 import Home from "../home/home.jsx";
 import {Signin, Signup} from '../login/lg_component.jsx';
 
-
 export default function Page_router() {
 	return (
 		<Routes>
