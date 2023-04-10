@@ -3,6 +3,15 @@ import logo_2 from "../../img/logo_2.png";
 import Button from "../button/button.jsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {AiFillHome} from 'react-icons/ai';
+import {FaThList, FaUserAlt} from 'react-icons/fa';
+import {SiGoogleclassroom} from 'react-icons/si';
+import {MdLocalActivity} from 'react-icons/md';
+import {HiDocumentText} from 'react-icons/hi';
+
+
+
 
 export default function Navigation(props) {
 	const [home, setHome] = useState("");
@@ -12,6 +21,7 @@ export default function Navigation(props) {
 	const [documents, setDocuments] = useState("");
 	const [profile, setProfile] = useState("");
 	const { Component = <></>} = props;
+	const name = useSelector(state => state.session.stateName);
 	const {
 		top_var,
 		user_container,
@@ -61,50 +71,53 @@ export default function Navigation(props) {
 			<header className={top_var}>
 				<img src={logo_2} alt="image not found" />
 				<div className={user_container}>
-					<h3>Bienvenido: </h3>
-					<div className={btn}>
-						<Button type="logout" text="Cerrar sesion" />
-					</div>
+					<h3>Bienvenido: {" "+name}</h3>
 				</div>
 			</header>
 			<div className={principal}>
+				<div className={content}>
+	  {/*<Component.type />*/}
+				</div>
 				<nav className={navigation}>
 					<ul>
 						<Link to="/Home">
 							<li className={home} onClick={()=>set_funcionality("1")}>
-								<a href="">Inicio</a>
+								<AiFillHome />
+								<p>Inicio</p>
 							</li>
 						</Link>
 						<Link to="/Lists" onClick={()=>set_funcionality("2")}>
 							<li className={lists}>
-								<a href="">Listados</a>
+	                                                        <FaThList/>
+								<p>Listados</p>
 							</li>
 						</Link>
 						<Link to="/Classroms" onClick={()=>set_funcionality("3")}>
 							<li className={classroom}>
-								<a href="">Cursos</a>
+								<SiGoogleclassroom/>
+								<p>Cursos</p>
 							</li>
 						</Link>
 						<Link to="/Activities" onClick={()=>set_funcionality("4")}>
 							<li className={activities}>
-								<a href="">Actividades</a>
+								<MdLocalActivity/>
+								<p>Actividades</p>
 							</li>
 						</Link>
 						<Link to="/Documents" onClick={()=>set_funcionality("5")}>
 							<li className={documents}>
-								<a href="">Documentos</a>
+								<HiDocumentText/>
+								<p>Documentos</p>
 							</li>
 						</Link>
 						<Link to="/Profile" onClick={()=>set_funcionality("6")}>
 							<li className={profile}>
-								<a href="">Perfil</a>
+								<FaUserAlt/>
+								<p>Perfil</p>
 							</li>
 						</Link>
 					</ul>
 				</nav>
-				<div className={content}>
-					<Component.type />
-				</div>
 			</div>
 		</>
 	);

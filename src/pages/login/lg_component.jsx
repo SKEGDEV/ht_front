@@ -1,30 +1,48 @@
 import styles from "./login.module.scss";
 import Input from '../../components/input/input.jsx';
 import Button from '../../components/button/button.jsx';
-import {Link, Navigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {notify} from '../../utils/notify.js';
 import {consume_api} from '../../utils/consume_api.js';
+import { useDispatch } from "react-redux";
+import { sessionUserAction } from "../../actions/sessionAction";
 
 export function Signin(){
-  const {lg_form, signup_btn} = styles;
-  const [no_document, setNo_document] = useState("");
-  const [password, setPassword] = useState("");
+  const {lg_form, signup_btn} = styles; 
+  const [signin_form, setSignin_form] = useState({
+    "document_number":"",
+    "password":""
+  });
+  const {document_number, password} = signin_form;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const set_lg_params = (name, value) =>{
+    setSignin_form({
+      ...signin_form,
+      [name]:value
+    });
+  }
   
   const signin = async()=>{
-    if(no_document ==="" || password===""){
+    if(!document_number || !password){
       const valid_msm = new notify("Todos los campos son obligatorios por favor completelos");
       valid_msm.warning();
       return;
     }
-    const params = {
-      "document_number":no_document,
-      "password":password
-    }
-    const call_signin = new consume_api("/auth/login", params, ""); 
-    await call_signin.post_petitions(); 
-    setPassword("");
-    setNo_document("");
+    const call_signin = new consume_api("/auth/login", signin_form, ""); 
+    const data = await call_signin.post_petitions(); 
+    const{token, name} = data;
+    if(token){
+      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
+      navigate("/home");
+    } 
+    setSignin_form({
+      ...signin_form,
+      "document_number":"",
+      "password":""
+    });
   }
   
   return(
@@ -34,15 +52,17 @@ export function Signin(){
        type="text"
        placeholder="Ingrese su numero de documento"
        lblText="No. Documento"
-       set_value={no_document}
-       get_value={setNo_document}
+       set_value={document_number}
+       get_value={set_lg_params}
+       name="document_number"
       />
       <Input
        type="password"
        placeholder="Ingrese su contraseña"
        lblText="Contraseña"
        set_value={password}
-       get_value={setPassword}
+       get_value={set_lg_params}
+       name="password"
       />
        <a href="#">Olvido su contraseña?</a>
       <Button

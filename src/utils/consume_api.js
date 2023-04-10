@@ -33,10 +33,9 @@ export class consume_api{
       const response = await axios.post(process.env.REACT_APP_API_BASE+this.uri, this.params, {headers:headers});
       const {data} = response  
       if(data["token"]){
-	localStorage.setItem('name', data["name"]);
 	const msm_welcome = new notify(data["msm"]);
-	msm_welcome.success();	
-	return
+	msm_welcome.success();
+	return data;
       }
       if(data["data"]){
 	const msm_generic = new notify(data["msm"]);
@@ -45,11 +44,17 @@ export class consume_api{
       }
       const msm = new notify(data["msm"]);
       msm.info();
-      }catch(error){
+      return{};
+      }catch(error){		
 	const {response: {data}} = error;
-	const err_msm = new notify("Error: "+data["err"]);
-	err_msm.error();
-	return [];
+	if(data["err"]){
+	  const err_msm = new notify("Error: "+data["err"]);
+	  err_msm.error();
+	  return {};
+	}	
+	const err_internal = new notify("Error: "+error.message);
+	err_internal.error();
+	return {};
       } 
   }
 
