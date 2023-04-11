@@ -1,48 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
-
-@mixin container {
-  width: 99%;
-  height: 98%;
-  margin: 0.5% 0 0 0.5%;
-  background: rgba(0, 0, 0, 0.58); 
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(13.8px);
-  -webkit-backdrop-filter: blur(13.8px);
-  border: 1px solid rgba(0, 0, 0, 0.3);
-}
+$btn_bg: #107acc;
+$transition: all 0.5s ease-in-out;
 
 .container{
-  @include container();
-  
+  width: 100%;
+  height: 100%;
+  margin-bottom: 150px;
   .card_container{
-    width: 90%;
-    height: 90%;
-    margin: 5% 0 0 5%;
-    display: flex; 
-    flex-wrap: wrap;
-
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     .card{
-      width: 20%;
-      height: 250px;
-      margin-right: 40px;
+      width: 95%;
+      margin: 20px 0 0 2.5%; 
+      box-shadow: 0 0 10px 10px rgba($color: #000000, $alpha: 0.2);
       border-radius: 10px;
-      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.7);
-      background-color: #FFFF99;
-      transform: rotate(-5deg);
-      display: flex;
-      flex-direction: column;
-      transition: all .3s ease-in-out;
-      &:hover{
-	transform: rotate(0deg);
-	transform: scale(1.05);
-      }
-    }
-    h2{
-      font-family: 'Dancing Script', cursive;
-      color: black;
+      padding: 5px 0 0 0;
       text-align: center;
-      width: 40%;
-      margin: 40px 0 20px 30%;
+    }
+    h4, p{
+      text-align: center;
+      margin: 0 0 20px 0;
+    }
+    svg{
+      font-size: 70px;
+      color: $btn_bg;
+    }
+    button{
+      width: 100%;
+      padding: 20px 0 20px 0;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border: none;
+      outline: none;
+      cursor:pointer;
+      background: $btn_bg;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      transition: $transition;
+      &:hover{
+	color: $btn_bg;
+	background-color: white;
+	border: 2px solid;
+	border-color: $btn_bg;
+      }
     }
   }
 }

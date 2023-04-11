@@ -76,44 +76,38 @@ export default function Navigation(props) {
 			</header>
 			<div className={principal}>
 				<div className={content}>
-	  {/*<Component.type />*/}
+				  <Component.type/>
 				</div>
 				<nav className={navigation}>
 					<ul>
 						<Link to="/Home">
 							<li className={home} onClick={()=>set_funcionality("1")}>
-								<AiFillHome />
-								<p>Inicio</p>
+								<button><AiFillHome /><span>Inicio</span></button>
 							</li>
 						</Link>
 						<Link to="/Lists" onClick={()=>set_funcionality("2")}>
-							<li className={lists}>
-	                                                        <FaThList/>
-								<p>Listados</p>
+							<li className={lists}> 
+								<button><FaThList/><span>Listados</span></button>
 							</li>
 						</Link>
 						<Link to="/Classroms" onClick={()=>set_funcionality("3")}>
-							<li className={classroom}>
-								<SiGoogleclassroom/>
-								<p>Cursos</p>
+							<li className={classroom}>	
+								<button><SiGoogleclassroom/><span>Cursos</span></button>
 							</li>
 						</Link>
 						<Link to="/Activities" onClick={()=>set_funcionality("4")}>
 							<li className={activities}>
-								<MdLocalActivity/>
-								<p>Actividades</p>
+								<button><MdLocalActivity/><span>Actividades</span></button>
 							</li>
 						</Link>
 						<Link to="/Documents" onClick={()=>set_funcionality("5")}>
 							<li className={documents}>
-								<HiDocumentText/>
-								<p>Documentos</p>
+								<button><HiDocumentText/><span>Documentos</span></button>
 							</li>
 						</Link>
 						<Link to="/Profile" onClick={()=>set_funcionality("6")}>
 							<li className={profile}>
-								<FaUserAlt/>
-								<p>Perfil</p>
+								<button><FaUserAlt/><span>Perfil</span></button>
 							</li>
 						</Link>
 					</ul>
