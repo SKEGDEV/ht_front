@@ -9,9 +9,7 @@ import {FaThList, FaUserAlt} from 'react-icons/fa';
 import {SiGoogleclassroom} from 'react-icons/si';
 import {MdLocalActivity} from 'react-icons/md';
 import {HiDocumentText} from 'react-icons/hi';
-
-
-
+import {BiLogOutCircle} from 'react-icons/bi';
 
 export default function Navigation(props) {
 	const [home, setHome] = useState("");
@@ -20,12 +18,11 @@ export default function Navigation(props) {
 	const [activities, setActivities] = useState("");
 	const [documents, setDocuments] = useState("");
 	const [profile, setProfile] = useState("");
-	const { Component = <></>} = props;
+	const { Component = <></>, Btn=<></>} = props;
 	const name = useSelector(state => state.session.stateName);
 	const {
 		top_var,
 		user_container,
-		btn,
 		principal,
 		navigation,
 		content,
@@ -62,7 +59,6 @@ export default function Navigation(props) {
 				setHome(activate);
 				break;
 		}
- console.log(window.location.pathname);
 	};
 
   useEffect(()=>{set_funcionality("1");},[])
@@ -78,6 +74,12 @@ export default function Navigation(props) {
 				<div className={content}>
 				  <Component.type/>
 				</div>
+				<Button
+				  Icon={BiLogOutCircle}
+				  text=""
+				  type="logout"
+				/>
+				<Btn.type/>
 				<nav className={navigation}>
 					<ul>
 						<Link to="/Home">

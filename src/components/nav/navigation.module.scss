@@ -11,7 +11,9 @@ $nav_bg: #107acc;
   text-align: center;
   align-items: center;
   overflow: hidden;
-  background-color: $top_bg;
+  background: rgba($color: $top_bg, $alpha: 1.0);
+  z-index: 1;
+  position: fixed;
   img{
     width: 90px;
   }

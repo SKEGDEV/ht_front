@@ -1,23 +1,32 @@
 import styles from "./button.module.scss";
 import { useState, useEffect } from "react";
 
+
 export default function Button(props) {
 	const [btn_type, setBtn_type] = useState(styles.primary);
-	const { type, press_btn, text } = props;
-	const { danger, success, logout, primary, button } = styles;
+	const { type, press_btn, text, Icon=<></> } = props;
+	const { danger, success, logout, primary, button, signin, add } = styles;
 
 	const get_btn_type = () => {
-		if (type == "danger") {
+		if (type === "danger") {
 			setBtn_type(danger);
 			return;
 		}
-		if (props.type == "success") {
+		if (type === "success") {
 			setBtn_type(success);
 			return;
 		}
-		if (props.type == "logout") {
+		if (type === "logout") {
 			setBtn_type(logout);
 			return;
+		}
+		if(type === "signin"){
+		  setBtn_type(signin);
+		  return;
+		}
+		if(type === "add"){
+		  setBtn_type(add);
+		  return;
 		}
 		setBtn_type(primary);
 	};
@@ -27,8 +36,9 @@ export default function Button(props) {
 	}, []);
 
 	return (
-		<button className={button + " " + btn_type} onClick={press_btn}>
-			{text}
+		<button className={button + " " + btn_type} onClick={press_btn}>			
+			<span>{text}</span>
+			<Icon/>
 		</button>
 	);
 }

@@ -7,6 +7,8 @@ import {notify} from '../../utils/notify.js';
 import {consume_api} from '../../utils/consume_api.js';
 import { useDispatch } from "react-redux";
 import { sessionUserAction } from "../../actions/sessionAction";
+import {RiLoginBoxFill} from "react-icons/ri";
+import {BsPersonFillAdd} from 'react-icons/bs';
 
 export function Signin(){
   const {lg_form, signup_btn} = styles; 
@@ -66,12 +68,13 @@ export function Signin(){
       />
        <a href="#">Olvido su contraseña?</a>
       <Button
-       type="success"
+       type="signin"
        text="Iniciar sesion" 
        press_btn={signin}
+       Icon={RiLoginBoxFill}
       />  
        <div className={signup_btn}>
-        <p>Aun no tienes cuenta?<Link to="/signup"><span>Crear cuenta</span></Link></p>  
+        <span>Aun no tienes cuenta?<Link to="/signup">Crear cuenta</Link></span> 
        </div> 
       </div>
     </>
@@ -149,11 +152,12 @@ export function Signup(){
        lblText="Contraseña"
      />
      <Button
-       type="success"
+       type="signin"
        text="Crear cuenta" 
+       Icon={BsPersonFillAdd}
      />
      <div className={signin_btn}>
-        <p>Ya tienes cuenta?<Link to="/"><span>Iniciar sesion</span></Link></p>  
+        <span>Ya tienes cuenta?<Link to="/">Iniciar sesion</Link></span>  
      </div>
     </div>
   )

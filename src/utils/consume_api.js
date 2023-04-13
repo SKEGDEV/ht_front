@@ -15,7 +15,12 @@ export class consume_api{
 	"Authorization": 'Bearer ' + this.token
       };
       const response = await axios.get(process.env.REACT_APP_API_BASE+this.uri, {headers:headers});
-      return response.data["data"];
+      const {data} = response
+      if(data["msm"] != "success"){
+	const default_msm = new notify(data["msm"]);
+	default_msm.info();
+      }
+      return data["data"];
     }catch(error){		
       const {response: {data}} = error;	
       const err_msm = new notify(("Error: "+data["err"]));
