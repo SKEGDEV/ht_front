@@ -12,7 +12,7 @@ export default function Page_router() {
 			<Route path="/" element={<Login Component={<Signin/>} />} />
 			<Route path="/signup" element={<Login Component={<Signup/>} />} />
 			<Route path="/Home" element={<Navigation Component={<Home />} />} />
-			<Route path="/Lists" element={<Navigation Component={<List/>} />} />
+			<Route path="/Lists" element={<Navigation Component={<List/>} active_btn={true}/>}/>
 			<Route path="/Classroms" element={<Navigation />} />
 			<Route path="/Activities" element={<Navigation />} />
 			<Route path="/Documents" element={<Navigation />} />

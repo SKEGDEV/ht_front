@@ -11,32 +11,83 @@ $login: #107acc;
 }
 
 .success{
-  color: $success;
-  border-color: $success;
-
+  width: 100%;
+  background: $success;
+  border: none;
+  outline: none;
+  padding: 10px 0 10px 0; 
+  border-radius: 10px;
+  span{
+    color: white;
+    font-size: 15px;
+  }
+  svg{
+    color: white;
+    font-size: 20px;
+    transform: translateY(5px);
+    margin-left: 3px;
+  }
   &:hover{
-    background: $success;
-    box-shadow: 0px 0px 5px 5px rgba($success, 0.6);
+    background-color: white;
+    border: 1px solid;
+    border-color: $success;
+  }
+  &:hover span, &:hover svg{
+    color: $success;
   }
 }
 
 .primary{
-  color: $primary;
-  border-color: $primary;
-
+  width: 100%;
+  background: $primary;
+  border: none;
+  outline: none;
+  padding: 10px 0 10px 0; 
+  border-radius: 10px;
+  span{
+    color: white;
+    font-size: 15px;
+  }
+  svg{
+    color: white;
+    font-size: 20px;
+    transform: translateY(5px);
+    margin-left: 3px;
+  }
   &:hover{
-    background: $primary;
-    box-shadow: 0px 0px 5px 5px rgba($primary, 0.6);
+    background-color: white;
+    border: 1px solid;
+    border-color: $primary;
+  }
+  &:hover span, &:hover svg{
+    color: $primary;
   }
 }
 
 .danger{
-  color: $danger;
-  border-color: $danger;
-
+  width: 100%;
+  background: $danger;
+  border: none;
+  outline: none;
+  padding: 10px 0 10px 0; 
+  border-radius: 10px;
+  span{
+    color: white;
+    font-size: 15px;
+  }
+  svg{
+    color: white;
+    font-size: 20px;
+    transform: translateY(5px);
+    margin-left: 3px;
+  }
   &:hover{
-    background: $danger;
-    box-shadow: 0px 0px 5px 5px rgba($danger, 0.6);
+    background-color: white;
+    border: 1px solid;
+    border-color: $danger;
+  }
+  &:hover span, &:hover svg{
+    color: $danger;
   }
 }
 .signin{
@@ -96,14 +147,13 @@ $login: #107acc;
   width: 45px;
   height: 45px;
   position: fixed;
-  float: right;
-  bottom: 3px;
+  bottom: 103px;
   left: 3px;
   background: $success;
   border: none;
   outline: none;
   border-radius: 50%;
-  box-shadow: 0 0 10px 10px rgba($color: #000000, $alpha: 0.1);
+  box-shadow: 0 0 10px 10px rgba($color: #000000, $alpha: 0.1); 
   svg{
     font-size: 30px;
     color: white;

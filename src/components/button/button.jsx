@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 export default function Button(props) {
 	const [btn_type, setBtn_type] = useState(styles.primary);
-	const { type, press_btn, text, Icon=<></> } = props;
+	const {isHide, type, press_btn, text, Icon=<></> } = props;
 	const { danger, success, logout, primary, button, signin, add } = styles;
 
 	const get_btn_type = () => {
@@ -36,7 +36,7 @@ export default function Button(props) {
 	}, []);
 
 	return (
-		<button className={button + " " + btn_type} onClick={press_btn}>			
+		<button className={button + " " + btn_type+" "+isHide} onClick={press_btn}>			
 			<span>{text}</span>
 			<Icon/>
 		</button>

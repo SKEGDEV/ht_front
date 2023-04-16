@@ -1,13 +1,21 @@
 import styles from './home.module.scss';
-import Button from '../../components/button/button.jsx'
-import {Link} from 'react-router-dom';
 import {IoMdSchool} from 'react-icons/io';
 import {MdClass,MdLocalActivity} from 'react-icons/md'
 import {HiDocument} from 'react-icons/hi'
 import {FaUserCog} from 'react-icons/fa'
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { lock_uiAction } from '../../actions/lock_uiActions';
+import { navigation_Actions } from '../../actions/navigationActions';
 
 export default function Home(){
   const {container, card_container, card} = styles
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(lock_uiAction({action:1,value:false}));
+    dispatch(navigation_Actions(1));
+  },[])
 
   return(
     <div className={container}>

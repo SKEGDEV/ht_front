@@ -7,6 +7,7 @@ import {notify} from '../../utils/notify.js';
 import {consume_api} from '../../utils/consume_api.js';
 import { useDispatch } from "react-redux";
 import { sessionUserAction } from "../../actions/sessionAction";
+import { lock_uiAction } from "../../actions/lock_uiActions";
 import {RiLoginBoxFill} from "react-icons/ri";
 import {BsPersonFillAdd} from 'react-icons/bs';
 
@@ -38,7 +39,8 @@ export function Signin(){
     const{token, name} = data;
     if(token){
       dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
-      navigate("/home");
+      dispatch(lock_uiAction({action:1,value:true}));  
+      setTimeout(()=>{navigate("/home");}, 2000); 
     } 
     setSignin_form({
       ...signin_form,

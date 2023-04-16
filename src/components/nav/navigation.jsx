@@ -10,6 +10,12 @@ import {SiGoogleclassroom} from 'react-icons/si';
 import {MdLocalActivity} from 'react-icons/md';
 import {HiDocumentText} from 'react-icons/hi';
 import {BiLogOutCircle} from 'react-icons/bi';
+import {AiOutlinePlus} from 'react-icons/ai';
+import { useDispatch } from "react-redux";
+import { lock_uiAction } from "../../actions/lock_uiActions";
+import { sessionUserAction } from "../../actions/sessionAction";
+import { consume_api } from "../../utils/consume_api";
+import { useNavigate } from "react-router-dom";
 
 export default function Navigation(props) {
 	const [home, setHome] = useState("");
@@ -18,8 +24,13 @@ export default function Navigation(props) {
 	const [activities, setActivities] = useState("");
 	const [documents, setDocuments] = useState("");
 	const [profile, setProfile] = useState("");
-	const { Component = <></>, Btn=<></>} = props;
+	const [btn, setBtn] = useState("");
+	const { Component = <></>} = props;
 	const name = useSelector(state => state.session.stateName);
+	const page = useSelector(state => state.navigation.funcionality);
+	const token = useSelector(state => state.session.stateSessionToken);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const {
 		top_var,
 		user_container,
@@ -27,41 +38,68 @@ export default function Navigation(props) {
 		navigation,
 		content,
 		activate,
+		hide
 	} = styles;
 
-	const set_funcionality = (funcionality) => {
+	const set_funcionality = () => {
 		setHome("");
 		setLists("");
 		setClassroom("");
 		setActivities("");
 		setDocuments("");
 		setProfile("");
-		switch (funcionality) {
-			case "1":
+		setBtn("");
+		switch (page) {
+			case 1:
 				setHome(activate);
+				setBtn(hide);
 				break;
-			case "2":
+			case 2:
 				setLists(activate);
 				break;
-			case "3":
+			case 3:
 				setClassroom(activate);
 				break;
-			case "4":
-				setActivities(activate);
+			case 4:
+				setActivities(activate);	
 				break;
-			case "5":
-				setDocuments(activate);
+			case 5:
+				setDocuments(activate);	
+				setBtn(hide);
 				break;
-			case "6":
+			case 6:
 				setProfile(activate);
+				setBtn(hide);
 				break;
 			default:
 				setHome(activate);
 				break;
 		}
 	};
+	const pres_logOut=()=>{
+	  dispatch(lock_uiAction({
+	    action:2,
+	    value:{
+	      isOpen:true,
+	      message:"Esta seguro de que quiere cerrar session?",
+	      type:3,
+	      exec:log_out
+	    }
+	  }));
+	}
 
-  useEffect(()=>{set_funcionality("1");},[])
+	const log_out= async()=>{
+	  const request = new consume_api("/auth/logout",{},token);
+	  await request.post_petitions();
+	  dispatch(lock_uiAction({action:1,value:true}));
+	  dispatch(sessionUserAction({
+	    sessionToken:"",
+	    sessionName:"",
+	    isLogged:false
+	  }));
+	  setTimeout(()=>{navigate("/");},1000);
+	}
+  useEffect(()=>{set_funcionality();})
 	return (
 		<>
 			<header className={top_var}>
@@ -70,44 +108,50 @@ export default function Navigation(props) {
 					<h3>Bienvenido: {" "+name}</h3>
 				</div>
 			</header>
-			<div className={principal}>
+			<div className={principal}>	
 				<div className={content}>
 				  <Component.type/>
-				</div>
+				</div>	
+				<Button
+				  text=""
+				  type="add"
+				  Icon={AiOutlinePlus}
+				  isHide={btn}
+				 />	
 				<Button
 				  Icon={BiLogOutCircle}
 				  text=""
 				  type="logout"
-				/>
-				<Btn.type/>
+				  press_btn={pres_logOut}
+				/>	
 				<nav className={navigation}>
 					<ul>
 						<Link to="/Home">
-							<li className={home} onClick={()=>set_funcionality("1")}>
+							<li className={home} >
 								<button><AiFillHome /><span>Inicio</span></button>
 							</li>
 						</Link>
-						<Link to="/Lists" onClick={()=>set_funcionality("2")}>
+						<Link to="/Lists" >
 							<li className={lists}> 
 								<button><FaThList/><span>Listados</span></button>
 							</li>
 						</Link>
-						<Link to="/Classroms" onClick={()=>set_funcionality("3")}>
+						<Link to="/Classroms">
 							<li className={classroom}>	
 								<button><SiGoogleclassroom/><span>Cursos</span></button>
 							</li>
 						</Link>
-						<Link to="/Activities" onClick={()=>set_funcionality("4")}>
+						<Link to="/Activities" >
 							<li className={activities}>
 								<button><MdLocalActivity/><span>Actividades</span></button>
 							</li>
 						</Link>
-						<Link to="/Documents" onClick={()=>set_funcionality("5")}>
+						<Link to="/Documents" >
 							<li className={documents}>
 								<button><HiDocumentText/><span>Documentos</span></button>
 							</li>
 						</Link>
-						<Link to="/Profile" onClick={()=>set_funcionality("6")}>
+						<Link to="/Profile" >
 							<li className={profile}>
 								<button><FaUserAlt/><span>Perfil</span></button>
 							</li>
