@@ -16,6 +16,7 @@ import { lock_uiAction } from "../../actions/lock_uiActions";
 import { sessionUserAction } from "../../actions/sessionAction";
 import { consume_api } from "../../utils/consume_api";
 import { useNavigate } from "react-router-dom";
+import { navigation_Actions } from "../../actions/navigationActions";
 
 export default function Navigation(props) {
 	const [home, setHome] = useState("");
@@ -71,6 +72,10 @@ export default function Navigation(props) {
 				setProfile(activate);
 				setBtn(hide);
 				break;
+			case 7:
+				setLists(activate);
+				setBtn(hide);
+			break;
 			default:
 				setHome(activate);
 				break;
@@ -99,6 +104,12 @@ export default function Navigation(props) {
 	  }));
 	  setTimeout(()=>{navigate("/");},1000);
 	}
+	const go_toCreate = ()=>{
+	  if(page ===2){
+	    navigate("create-list");
+	    dispatch(navigation_Actions(7));
+	  }
+	}
   useEffect(()=>{set_funcionality();})
 	return (
 		<>
@@ -117,6 +128,7 @@ export default function Navigation(props) {
 				  type="add"
 				  Icon={AiOutlinePlus}
 				  isHide={btn}
+				  press_btn={go_toCreate}
 				 />	
 				<Button
 				  Icon={BiLogOutCircle}

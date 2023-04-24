@@ -6,7 +6,7 @@ $btn_bg: #107acc;
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  margin: 0 0 170px 0;
+  margin: 0 0 190px 0;
   background-color: $bg_base;
   transform: translateY(90px);
 }
@@ -75,5 +75,62 @@ $btn_bg: #107acc;
     }
   }
   
+}
+.create_container{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0 0 190px 0;
+  transform: translateY(90px);
+  .slider_container{
+    width: 200%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    transition: all .5s ease-in-out;
+  }
+  .step{
+    transform: translateX(-50%);
+  }
+  .slider_item{
+    width: 100%;
+    height: 100%;
+    .item_header{
+      width: 100%;
+      margin: 20px 0 50px 0;
+      h4{
+	text-align: center;
+	margin: 0 0 10px 0;
+      }
+      p{
+	text-align: justify;
+	width: 80%;
+	margin: 0 0 10px 10%;
+      }
+    }
+    .item_body{
+      width: 95%;
+      margin: 0 0 20px 0.5%;
+    }
+    .item_footer{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin: 0 0 20px 0;
+      .f_left{
+	width: 40%;
+      }
+      .f_right{
+	width: 40%;
+	margin-left: 10%;
+      }
+    }
+  }
+  .student{
+    height: 0;
+    overflow: hidden;
+  }
 }
 

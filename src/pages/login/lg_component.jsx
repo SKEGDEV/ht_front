@@ -1,6 +1,7 @@
 import styles from "./login.module.scss";
 import Input from '../../components/input/input.jsx';
 import Button from '../../components/button/button.jsx';
+import Select from "../../components/select/select";
 import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {notify} from '../../utils/notify.js';
@@ -39,7 +40,7 @@ export function Signin(){
     const{token, name} = data;
     if(token){
       dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
-      dispatch(lock_uiAction({action:1,value:true}));  
+      dispatch(lock_uiAction({action:1,value:true}));
       setTimeout(()=>{navigate("/home");}, 2000); 
     } 
     setSignin_form({
@@ -87,12 +88,113 @@ export function Signup(){
   const {lg_form, signin_btn} = styles;
   const [country, setCountry] = useState([]);
   const [docType, setDocType] = useState([]);
+  const [params, setParams] = useState({
+    "first_name":"",
+    "last_name":"",
+    "birthday":"",
+    "usr_password":"",
+    "confirm_password":"",
+    "document":"",
+    "email":"",
+    "phone":"",
+    "document_type":"0",
+    "country_id":"0"
+  });
+  const [region_code, setRegionCode] = useState("");
+  const [country_doc, setCountry_doc] = useState("");
+
+  const{first_name, last_name, birthday, usr_password, confirm_password, document, email, phone, document_type, country_id}=params;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const get_catalogs = async()=>{
-    const get_country = new consume_api("/catalogs/get-catalog/1",{},"");    
-    const get_doc = new consume_api("/catalogs/get-catalog/2",{},"");
+    const get_country = new consume_api("/catalogs/get-catalog/1/0",{},"");  
     setCountry(await get_country.get_petitions());
-    setDocType(await get_doc.get_petitions());
+    return; 
+  }
+
+  const get_params= async(name, value)=>{
+    setParams({
+      ...params,
+      [name]:value
+    });
+    if(name === "country_id"){ 
+      const get_doc = new consume_api("/catalogs/get-catalog/2/"+value,{},"");
+      setDocType(await get_doc.get_petitions()); 
+      var code="";
+      country.map(d=>{
+	if(d[0]==value){
+	  code = `+${d[2]} ${d[3]}`; 
+	}
+      });
+      setRegionCode(code);
+      return;
+    }
+    if(name === "document_type"){
+      var type = "";
+      docType.map(d=>{
+	if(d[0]==value){
+	  type=`No. ${d[1]}`
+	}
+      });
+      setCountry_doc(type);
+    }
+  }
+
+  const clean_params=()=>{
+    if(!first_name || !last_name || !usr_password || !confirm_password || !document || !email || !phone || !document_type || !country_id){
+      return false
+    }
+    if(usr_password !== confirm_password){
+      const password_noMatch = new notify("Las contraseñas no son iguales por favor verifique que concuerden");
+      password_noMatch.warning();
+      return false;
+    }
+    if(!validate_age()){
+      const isKid = new notify("Se requiere que el usuario sea mayor de edad");
+      isKid.warning();
+      return false;
+    }
+    return true
+  }
+
+  const validate_age=()=>{
+    var date_birthday = new Date(birthday);
+    var date_today = new Date();
+    var age = date_today.getFullYear() - date_birthday.getFullYear();
+    if(age>=18){
+      return true;
+    }
+    return false;
+  }
+
+  const signup = async()=>{
+    if(!clean_params()){
+      const incorrect_params = new notify("Ocurrio un error de validacion, por favor verfique que todos sus datos sean correctos");
+      incorrect_params.warning();
+      return;
+    }
+    const create_account = new consume_api("/auth/create-account", params, "");
+    const data = await create_account.post_petitions();
+    const {token, name} = data
+    if(token){
+      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
+      dispatch(lock_uiAction({action:1,value:true}));
+      setTimeout(()=>{navigate("/home");}, 2000);     
+    }
+    setParams({
+      ...params,
+      "first_name":"",
+      "last_name":"",
+      "birthday":"",
+      "usr_password":"",
+      "confirm_password":"",
+      "document":"",
+      "email":"",
+      "phone":"",
+      "document_type":"0",
+      "country_id":"0"
+    });
   }
 
   useEffect(()=>{
@@ -105,58 +207,85 @@ export function Signup(){
        type="text"
        placeholder="Ingrese su/sus nombres"
        lblText="Nombres"
+       name="first_name"
+       get_value={get_params}
+       set_value={first_name}
      />
      <Input
        type="text"
        placeholder="Ingrese sus apellidos"
        lblText="Apellidos"
+       name="last_name"
+       get_value={get_params}
+       set_value={last_name}
      />
      <Input
        type="date"
        placeholder="Ingrese su fecha de cumpleaños"
        lblText="Cumpleaños"
+       name="birthday"
+       get_value={get_params}
+       set_value={birthday}
      />
-     <select>
-       <option value={0}>Seleccione un pais</option>
-       {country.map(d=>(
-       <option value={d[0]}>{d[1]}</option>
-       ))} 
-     </select>
-     <select>
-       <option value="0">Seleccione un tipo de documento</option>
-       {docType.map(d=>(
-       <option value={d[0]}>{d[1]}</option>
-       ))}
-     </select>
+     <Select
+       options={country}
+       msm="su pais de residencia"
+       name="country_id"
+       get_value={get_params}
+       set_value={country_id}
+     />
+     <Select
+       options={docType}
+       msm="el tipo de documento a utilizar"
+       name="document_type"
+       get_value={get_params}
+       set_value={document_type}
+     />
      <Input
        type="text"
        placeholder="Ingrese su numero de documento"
-       lblText="No. Documento"
+       lblText={"No. Documento "+country_doc}
+       name="document"
+       get_value={get_params}
+       set_value={document}
      />
      <Input 
        type="email"
        placeholder="Ingrese su direccion de correo electronico"
        lblText="Correo electronico"
+       name="email"
+       get_value={get_params}
+       set_value={email}
      />
      <Input 
        type="text"
        placeholder="Ingrese su  numero telefonico"
-       lblText="Numero telefonico"
+       lblText={"Numero telefonico "+region_code}
+       name="phone"
+       get_value={get_params}
+       set_value={phone}
      />
      <Input 
        type="password"
        placeholder="Ingrese su contraseña"
        lblText="Contraseña"
+       name="usr_password"
+       get_value={get_params}
+       set_value={usr_password}
      />
      <Input 
        type="password"
        placeholder="Confirme su contraseña"
        lblText="Contraseña"
+       name="confirm_password"
+       get_value={get_params}
+       set_value={confirm_password}
      />
      <Button
        type="signin"
        text="Crear cuenta" 
        Icon={BsPersonFillAdd}
+       press_btn={signup}
      />
      <div className={signin_btn}>
         <span>Ya tienes cuenta?<Link to="/">Iniciar sesion</Link></span>  
