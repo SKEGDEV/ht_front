@@ -47,9 +47,7 @@ export class consume_api{
 	msm_generic.info();
 	return data["data"];
       }
-      const msm = new notify(data["msm"]);
-      msm.info();
-      return{};
+      return data;
       }catch(error){		
 	const {response: {data}} = error;
 	if(data["err"]){

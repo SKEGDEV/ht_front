@@ -58,6 +58,7 @@ function Info_modal(props){
   const {Icon, title, type} = props
   const msm = useSelector(state => state.lock_ui.modal_message);
   const dispatch = useDispatch();
+  const exec_fn = useSelector(state=> state.lock_ui.modal_fn);
   const close = ()=>{
     dispatch(lock_uiAction({
       action:2,
@@ -84,7 +85,7 @@ function Info_modal(props){
        Icon={BsCheck2Square}
        text="Aceptar"
        type="primary"
-       press_btn={close}
+       press_btn={()=>{exec_fn(); close();}}
       />
      </div>
     </div>

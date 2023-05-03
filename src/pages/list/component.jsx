@@ -2,12 +2,17 @@ import styles from './list.module.scss';
 import { useState} from 'react';
 import Input from '../../components/input/input';
 import Button from '../../components/button/button';
-import {MdCancel, MdSkipNext, MdAddCircle, MdSave} from 'react-icons/md';
+import {MdCancel, MdSkipNext, MdAddCircle, MdSave, MdDelete} from 'react-icons/md';
 import {IoIosSkipBackward} from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { notify } from '../../utils/notify';
+import { consume_api } from '../../utils/consume_api';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { lock_uiAction } from '../../actions/lock_uiActions';
+var index = 1;
 
-export function Create_list(){
+export function Create_list(){ 
   const [next, setNext] = useState("");
   const {create_container,
 	 slider_container,
@@ -18,11 +23,17 @@ export function Create_list(){
 	 f_left,
          f_right,
 	 step,
-	 student} = styles;
+	 student,
+	 table_item,
+	 table_index,
+	 table_name,
+	 table_btn} = styles;
+	
   const [expand, setExpand] = useState(student);
   const [list_name, setListName] = useState("");
-  var students = []; 
-  const [params, setParams]=useState({
+  const [students, setStudent] = useState([]);
+  const [params, setParams]=useState({ 
+    "index":0,
     "first_name":"",
     "last_name":"",
     "code":"",
@@ -31,16 +42,17 @@ export function Create_list(){
     "mother_number":"",
     "phone_number":""
   });
-  var index = 1;
-  const {first_name, last_name, code, birthday, father_number, mother_number, phone_number} = params;
-
+  const {first_name, last_name, code, birthday, father_number, mother_number, phone_number} = params; 
   const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const token = useSelector(state=>state.session.stateSessionToken);
   const get_value = (name, value)=>{
     setParams({
       ...params,
+      "index":index,
       [name]:value
-    });
-  }
+    });  
+   }
   const get_listName = (name, value)=>{
     setListName(value);
   }
@@ -51,9 +63,9 @@ export function Create_list(){
       return;
     }
     students.push(params);
-    console.log(students);
+    index+=1;
     setParams({
-    ...params,
+    ...params, 
     "first_name":"",
     "last_name":"",
     "code":"",
@@ -62,6 +74,47 @@ export function Create_list(){
     "mother_number":"",
     "phone_number":""
     });
+  }
+  const remove = (id)=>{
+    var temp = []
+    students.map(d=>{
+      if(d["index"] != id){
+        temp.push(d);
+      }
+    });
+    setStudent(temp); 
+  }
+  const create_list = async ()=>{
+    if(students.length === 0 ){
+      const warning = new notify("Se debe agregar por lo menos un estudiante al listado");
+      warning.warning();
+      return;
+    }
+    dispatch(lock_uiAction({action:1, value:true}));
+    const data = {
+      name:list_name,
+      data:students
+    }
+    const request = new consume_api("/student/create-student-list", data, token);
+    const msm = await request.post_petitions();
+    if(msm["msm"]){
+      setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}));}, 500);
+      dispatch(lock_uiAction({action:2, value:{
+	isOpen:true,
+	message:msm["msm"],
+	type:1,
+	exec:()=>{navigate("/Lists");}
+    }}));
+    }
+  }
+  const change_form = ()=>{
+    if(!list_name){
+      const warning = new notify("El nombre del listado es requerido");
+      warning.warning();
+      return; 
+    }
+    setNext(step);
+    setExpand("");
   }
 
   return(
@@ -94,7 +147,7 @@ export function Create_list(){
            <Button
              Icon={MdSkipNext}
              text="Siguiente" 
-             press_btn={()=>{setNext(step);setExpand("");}}
+             press_btn={change_form}
            />
          </div>
         </div>
@@ -104,9 +157,9 @@ export function Create_list(){
          <h4>Paso 2</h4>
          <p>Agrega tu listado de estudiantes, puedes agregar tantos cuanto necesites</p>        
          <Button
-           text="Guardar listado"
-           type="success"
+           text="Guardar listado" 
            Icon={MdSave}
+           press_btn={create_list}
          />
         </div>
         <div className={item_body}>
@@ -185,6 +238,23 @@ export function Create_list(){
            />
          </div>        
         </div>
+        {students.map(d=>(
+        <div className={table_item}>
+         <div className={table_index}>
+           <h1>{d["index"]}</h1>
+         </div>
+         <div className={table_name}>
+           <h4>{d["first_name"]+" "+d["last_name"]}</h4>
+         </div>
+         <div className={table_btn}>
+           <Button
+            Icon={MdDelete}
+            type="danger"
+	    press_btn={()=>{remove(d["index"]);}}
+           />
+         </div>
+       </div>
+	))}
       </div>
      </div>
     </div>
