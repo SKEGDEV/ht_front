@@ -76,6 +76,10 @@ export default function Navigation(props) {
 				setLists(activate);
 				setBtn(hide);
 			break;
+			case 8:
+				setClassroom(activate);	
+				setBtn(hide);
+			break;
 			default:
 				setHome(activate);
 				break;
@@ -108,6 +112,10 @@ export default function Navigation(props) {
 	  if(page ===2){
 	    navigate("create-list");
 	    dispatch(navigation_Actions(7));
+	  }
+	  if(page===3){
+	    navigate("create-classroom");
+	    dispatch(navigation_Actions(8));
 	  }
 	}
   useEffect(()=>{set_funcionality();})

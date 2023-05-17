@@ -16,6 +16,9 @@ export class consume_api{
       };
       const response = await axios.get(process.env.REACT_APP_API_BASE+this.uri, {headers:headers});
       const {data} = response
+      if(data["isEmpty"] || data["isUnique"]){
+	return data
+      }
       if(data["msm"] != "success"){
 	const default_msm = new notify(data["msm"]);
 	default_msm.info();
@@ -36,17 +39,15 @@ export class consume_api{
 	"Authorization": 'Bearer ' + this.token
       };
       const response = await axios.post(process.env.REACT_APP_API_BASE+this.uri, this.params, {headers:headers});
-      const {data} = response  
+      const {data} = response
       if(data["token"]){
 	const msm_welcome = new notify(data["msm"]);
 	msm_welcome.success();
 	return data;
       }
-      if(data["data"]){
-	const msm_generic = new notify(data["msm"]);
-	msm_generic.info();
-	return data["data"];
-      }
+      if(data.data){
+	return data;
+      } 
       return data;
       }catch(error){		
 	const {response: {data}} = error;

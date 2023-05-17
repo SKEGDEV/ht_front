@@ -1,5 +1,6 @@
 $bg_base:#dfe0ea;
 $btn_bg: #107acc;
+$success: #5ccb5f;
 
 .classroom_container{
   width: 100%;
@@ -9,14 +10,58 @@ $btn_bg: #107acc;
   background-color: $bg_base;
   transform: translateY(90px);
 }
-
 .classroom_item{
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center; 
+  flex-direction: row;
   border-bottom: .5px solid;
   border-color: gray;
+  .l_item{
+    width: 80%;
+  }
+  .r_item{
+    width: 20%;
+    button{
+      height: 100%;
+      width: 100%;
+      border: none;
+      outline: none;
+      background-color: $btn_bg;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items:center;
+      transition: all .5s ease-in-out;
+
+      &:hover {
+	background-color: white;
+	border: .3px solid;
+	border-color: $btn_bg;
+      }
+      &:hover svg, &:hover span{
+	color: $btn_bg;
+      }
+    }
+    svg{
+      font-size: 25px;
+      color: white;
+      margin-top:25px;
+    }
+    span{
+      font-size: 10px;
+      color: white;
+      margin-top: 5px;
+    }
+  }
+
+}
+
+
+.l_item{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 10px 0 10px 0;
   .item_top{
     margin-bottom: 10px;
@@ -37,6 +82,56 @@ $btn_bg: #107acc;
       border: 1px solid;
       border-color: $btn_bg;
       color: $btn_bg;
+    }
+  }
+}
+
+.create_container{
+  width: 95%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0 0 190px 2.5%;
+  transform: translateY(90px);
+  padding-top: 45px;
+  .create_btn{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 30px;
+    .l_create{
+      width: 40%;
+    }
+    .r_create{
+      width: 40%;
+      margin-left: 10%;
+    }
+  }
+  
+}
+
+.clist_item{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.3px solid;
+  border-color: gray;
+  .clsit_info{
+    width: 80%;
+    p{
+      width: 100%;
+      overflow-y: hidden;
+      height: 22px;
+      margin: 5px 0 0 10px;
+    }
+  }
+  .clist_btn{
+    width: 20%;
+    button{
+      border-radius: 0px;
+      span{
+	font-size: 11px;
+      }
     }
   }
 }
