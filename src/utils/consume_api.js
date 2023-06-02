@@ -19,15 +19,22 @@ export class consume_api{
       if(data["isEmpty"] || data["isUnique"]){
 	return data
       }
-      if(data["msm"] != "success"){
-	const default_msm = new notify(data["msm"]);
-	default_msm.info();
+      if(data["auth"]){
+	return data;
       }
       return data["data"];
     }catch(error){		
-      const {response: {data}} = error;	
-      const err_msm = new notify(("Error: "+data["err"]));
-      err_msm.error();
+      const {response: {data}} = error;
+      if(data["msm"] === "Authorization"){
+	return data;
+      }
+      if(data["err"]){
+	const err_msm = new notify(("Error: "+data["err"]));
+	err_msm.error();
+	return[];
+      } 
+      const err_internal = new notify("Error: "+error.message);
+      err_internal.error();
       return [];
     } 
   }
@@ -41,8 +48,6 @@ export class consume_api{
       const response = await axios.post(process.env.REACT_APP_API_BASE+this.uri, this.params, {headers:headers});
       const {data} = response
       if(data["token"]){
-	const msm_welcome = new notify(data["msm"]);
-	msm_welcome.success();
 	return data;
       }
       if(data.data){
@@ -62,8 +67,32 @@ export class consume_api{
       } 
   }
 
-  put_petitions = function async(){
-
+  put_petitions = async function(){
+    try{
+      const headers = {
+	"Content-type": "application/json; charset=utf-8",
+	"Authorization": 'Bearer ' + this.token
+      }
+      const response = await axios.put(process.env.REACT_APP_API_BASE+this.uri, this.params, {headers:headers});
+      const {data} = response
+      if(data["isValid"]){
+	return data;
+      }
+      if(data["msm"]){
+	return data["msm"]
+      }
+      return "Success"
+    }catch(e){
+      const {response: {data}} = e
+      if(data["err"]){
+	const err_msm = new notify(`Error: ${data["err"]}`);
+	err_msm.error();
+	return "";
+      }
+      const err_internal = new notify(`Error: ${e.message}`);
+      err_internal.err_msm();
+      return "";
+    }
   }
 
   delete_petitions = function async(){

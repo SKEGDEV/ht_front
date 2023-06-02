@@ -15,6 +15,7 @@ export default function Modal(){
   const [isHide, setIsHide] = useState("");
 
   const set_modal= ()=>{
+    setModal_t("");
     if(type === 0){
       setModal_t(<Info_modal Icon={BsInfoCircleFill} title="Informacion" type={info}/>);
       return

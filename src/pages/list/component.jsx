@@ -239,7 +239,7 @@ export function Create_list(){
          </div>        
         </div>
         {students.map(d=>(
-        <div className={table_item}>
+        <div key={d[0]} className={table_item}>
          <div className={table_index}>
            <h1>{d["index"]}</h1>
          </div>

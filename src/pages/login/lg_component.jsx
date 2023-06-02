@@ -6,7 +6,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {notify} from '../../utils/notify.js';
 import {consume_api} from '../../utils/consume_api.js';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sessionUserAction } from "../../actions/sessionAction";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import {RiLoginBoxFill} from "react-icons/ri";
@@ -21,6 +21,17 @@ export function Signin(){
   const {document_number, password} = signin_form;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
+
+  const isAuth = async()=>{
+    const request = new consume_api("/auth/verify-session", {}, stateSessionToken);
+    const response = await request.get_petitions();
+    if(isLogged && response["msm"] === "success"){
+      navigate(`/Home`);
+      return;
+    }
+    
+  }
 
   const set_lg_params = (name, value) =>{
     setSignin_form({
@@ -28,6 +39,10 @@ export function Signin(){
       [name]:value
     });
   }
+
+  useEffect(()=>{
+    isAuth();
+  },[]);
   
   const signin = async()=>{
     if(!document_number || !password){
@@ -35,21 +50,28 @@ export function Signin(){
       valid_msm.warning();
       return;
     }
+    dispatch(lock_uiAction({action:1, value:true}));
     const call_signin = new consume_api("/auth/login", signin_form, ""); 
     const data = await call_signin.post_petitions(); 
-    const{token, name} = data;
+    const{token, msm, name} = data;
     if(token){
-      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
-      dispatch(lock_uiAction({action:1,value:true}));
-      setTimeout(()=>{navigate("/home");}, 2000); 
+      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true})); 
+      setTimeout(()=>{dispatch(lock_uiAction({action:1,value:false}));}, 500); 
+      dispatch(lock_uiAction({action:2, value:{
+	isOpen:true,
+	message:msm,
+	type:1,
+	exec:()=>{navigate("/Home");}
+      }}));
     } 
     setSignin_form({
       ...signin_form,
       "document_number":"",
       "password":""
     });
-  }
-  
+
+  }  
+
   return(
     <> 
       <div className={lg_form}>
@@ -174,13 +196,19 @@ export function Signup(){
       incorrect_params.warning();
       return;
     }
+    dispatch(lock_uiAction({action:1,value:true}));
     const create_account = new consume_api("/auth/create-account", params, "");
     const data = await create_account.post_petitions();
-    const {token, name} = data
+    const {token, msm, name} = data
     if(token){
-      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true}));
-      dispatch(lock_uiAction({action:1,value:true}));
-      setTimeout(()=>{navigate("/home");}, 2000);     
+      dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true})); 
+      setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);     
+      dispatch(lock_uiAction({action:2, value:{
+	isOpen:true,
+	message:msm,
+	type:1,
+	exec:()=>{navigate("/Home");}
+      }}));
     }
     setParams({
       ...params,

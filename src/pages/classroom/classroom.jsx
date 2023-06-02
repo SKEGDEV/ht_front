@@ -27,7 +27,13 @@ export default function Classroom(){
   const get_classrooms = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
     const request = new consume_api("/classroom/get-classrooms", {}, token);
-    setClassroom(await request.get_petitions());
+    const response = await request.get_petitions();
+    if(response["msm"]){
+      dispatch(lock_uiAction({action:1, value:false}));
+      setClassroom([]);
+      return;
+    }
+    setClassroom(response);
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 1000);
   }
 
@@ -38,7 +44,7 @@ export default function Classroom(){
 
   const goto_select = (number, id)=>{
     dispatch(id_Action(id));
-    navigate(`select-clist/${btoa(number)}`);
+    navigate(`select-clist/${btoa(number)}/${btoa(1)}`);
   }
   
   useEffect(()=>{
@@ -49,7 +55,7 @@ export default function Classroom(){
   return(
     <div className={classroom_container}>
     {classroom.map(d=>(
-     <div className={classroom_item}>
+     <div key={d[0]} className={classroom_item}>
       <div className={l_item}>
        <div className={item_top}>
          <h4>{d[1]}</h4>
@@ -77,7 +83,7 @@ export default function Classroom(){
 }
 
 export function Select_clist(){
-  const {clist_number} = useParams();
+  const {clist_number, search_type} = useParams();
   const {search_id:{search_id}, session:{stateSessionToken}} = useSelector(state => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -91,7 +97,10 @@ export function Select_clist(){
       return
     }
     const request = new consume_api(`/classroom/get-clist/${search_id}`, {}, stateSessionToken)
-    const data = await request.get_petitions();
+    const data = await request.get_petitions(); 
+    if(data["msm"] === "Authorization"){
+      return;
+    }
     if(data["isEmpty"]){
       dispatch(lock_uiAction({action:2, value:{
 	isOpen:true,
@@ -105,6 +114,10 @@ export function Select_clist(){
       data.data.map(d=>{
 	dispatch(id_Action(d[0]));
       });
+      if(atob(search_type) == 2){
+	navigate(`/Activities/get-all-activities/${clist_number}`);
+	return;
+      }
       navigate(`/Classroms/get-class-list/${clist_number}`);
       return;
     } 
@@ -119,6 +132,10 @@ export function Select_clist(){
       return;
     }
     dispatch(id_Action(clist_id));
+    if(atob(search_type)==2){
+      navigate(`/Activities/get-all-activities/${clist_number}`);
+      return;
+    }
     navigate(`/Classroms/get-class-list/${clist_number}`);
   }
 
@@ -142,7 +159,10 @@ export function Select_clist(){
            Icon={MdCancel}
            type="danger"
            text="Cancelar"
-           press_btn={()=>{navigate("/Classroms")}}
+           press_btn={()=>{
+	     dispatch(id_Action(0));
+	     atob(search_type) == 2? navigate("/Activities"):navigate("/Classroms");
+	   }}
          />
        </div>
        <div className={r_create}>
@@ -167,13 +187,16 @@ export function Get_clist(){
   const [c_studnet, setC_student] = useState([]);
 
   const get_cStudents = async()=>{
+    dispatch(lock_uiAction({action:1, value:true}));
     const request = new consume_api(`/classroom/get-all-unit-student/${search_id}/${atob(clist_number)}`, {}, stateSessionToken);
     const data = await request.get_petitions();
-    if(data){
-      setC_student(data);
+    if(data["msm"]){
+      setC_student([]);
+      dispatch(lock_uiAction({action:1, value:false}));
       return;
     }
-
+    setC_student(data);
+    setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);
   }
 
   useEffect(()=>{
@@ -183,7 +206,7 @@ export function Get_clist(){
   return(
     <div className={classroom_container}> 
      {c_studnet.map(d=>(
-      <div className={clist_item}>
+      <div key={d[0]} className={clist_item}>
        <div className={clsit_info}>
          <p>{`Nombre completo: ${d[1]}`}</p>
          <p>{`Codigo estudiante: ${d[2]}`}</p>

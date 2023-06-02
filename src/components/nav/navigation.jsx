@@ -2,7 +2,7 @@ import styles from "./navigation.module.scss";
 import logo_2 from "../../img/logo_2.png";
 import Button from "../button/button.jsx";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {AiFillHome} from 'react-icons/ai';
 import {FaThList, FaUserAlt} from 'react-icons/fa';
@@ -15,8 +15,8 @@ import { useDispatch } from "react-redux";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import { sessionUserAction } from "../../actions/sessionAction";
 import { consume_api } from "../../utils/consume_api";
-import { useNavigate } from "react-router-dom";
 import { navigation_Actions } from "../../actions/navigationActions";
+var last_functionality = 0;
 
 export default function Navigation(props) {
 	const [home, setHome] = useState("");
@@ -29,7 +29,8 @@ export default function Navigation(props) {
 	const { Component = <></>} = props;
 	const name = useSelector(state => state.session.stateName);
 	const page = useSelector(state => state.navigation.funcionality);
-	const token = useSelector(state => state.session.stateSessionToken);
+	const {points} = useParams();
+	const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {
@@ -63,6 +64,7 @@ export default function Navigation(props) {
 				break;
 			case 4:
 				setActivities(activate);	
+				setBtn(hide);
 				break;
 			case 5:
 				setDocuments(activate);	
@@ -78,6 +80,17 @@ export default function Navigation(props) {
 			break;
 			case 8:
 				setClassroom(activate);	
+				setBtn(hide);
+			break;
+			case 9:
+				setActivities(activate);
+			break;
+			case 10:
+				setActivities(activate);
+				setBtn(hide);
+			break;	
+			case 11: 
+				setActivities(activate);
 				setBtn(hide);
 			break;
 			default:
@@ -97,8 +110,16 @@ export default function Navigation(props) {
 	  }));
 	}
 
+	const get_param = (pathname)=>{
+	  var param = ""
+	  for(var i = 31; i<pathname.length; i++) {
+	    param += pathname[i]
+	  }
+	  return param;
+	}
+
 	const log_out= async()=>{
-	  const request = new consume_api("/auth/logout",{},token);
+	  const request = new consume_api("/auth/logout",{},stateSessionToken);
 	  await request.post_petitions();
 	  dispatch(lock_uiAction({action:1,value:true}));
 	  dispatch(sessionUserAction({
@@ -108,6 +129,7 @@ export default function Navigation(props) {
 	  }));
 	  setTimeout(()=>{navigate("/");},1000);
 	}
+
 	const go_toCreate = ()=>{
 	  if(page ===2){
 	    navigate("create-list");
@@ -117,8 +139,27 @@ export default function Navigation(props) {
 	    navigate("create-classroom");
 	    dispatch(navigation_Actions(8));
 	  }
+	  if(page === 9){  
+	    navigate(`/Activities/create-new-activity/${get_param(window.location.pathname)}`);
+	  }
 	}
-  useEffect(()=>{set_funcionality();})
+	
+	const isAuth = async()=>{
+	  const request = new consume_api("/auth/verify-session", {}, stateSessionToken);
+	  const response = await request.get_petitions();
+	  if(isLogged && response["msm"] === "success"){
+	    return;
+	  }
+	  navigate(`/out-session/${btoa(response["err"])}`);
+	}
+  
+  useEffect(()=>{
+    set_funcionality();
+    if(last_functionality !== page){
+      last_functionality = page;
+      isAuth();
+    }
+  })
 	return (
 		<>
 			<header className={top_var}>

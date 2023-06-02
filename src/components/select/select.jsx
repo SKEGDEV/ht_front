@@ -12,7 +12,7 @@ export default function Select(props){
      name={name}>
       <option value={0}>{"Seleccione" + msm}</option>
        {options.map(d=>(
-       <option value={d[value_i]}>{d[option_i]}</option>
+       <option key={d[0]} value={d[value_i]}>{d[option_i]}</option>
        ))} 
     </select>
   );
