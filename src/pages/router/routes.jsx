@@ -4,9 +4,10 @@ import Navigation from "../../components/nav/navigation.jsx";
 import Not_found from "../not_found/not_found.jsx";
 import Home from "../home/home.jsx";
 import List from "../list/list.jsx";
+import { Get_list_student } from "../list/list.jsx";
 import Classroom from "../classroom/classroom.jsx";
 import {Signin, Signup} from '../login/lg_component.jsx';
-import { Create_list } from "../list/component.jsx";
+import { Create_list, Add_update_student } from "../list/component.jsx";
 import { Create_classroom, Upload_listing } from "../classroom/component.jsx";
 import { Select_clist, Get_clist } from "../classroom/classroom.jsx";
 import Not_session from "../not_found/off_session.jsx";
@@ -23,6 +24,8 @@ export default function Page_router() {
      <Route path="/Lists" >
        <Route index element={<Navigation Component={<List/>}/>}/>
        <Route path="create-list" element={<Navigation Component={<Create_list/>}/>}/>
+       <Route path="get-student/:list_id" element={<Navigation Component={<Get_list_student/>}/>}/>
+       <Route path="add-update-student/:list_id/:s_id" element={<Navigation Component={<Add_update_student/>}/>}/>
      </Route>
      <Route path="/Classroms">
        <Route index element={<Navigation Component={<Classroom/>}/>}/>

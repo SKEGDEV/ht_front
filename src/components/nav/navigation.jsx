@@ -2,7 +2,7 @@ import styles from "./navigation.module.scss";
 import logo_2 from "../../img/logo_2.png";
 import Button from "../button/button.jsx";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {AiFillHome} from 'react-icons/ai';
 import {FaThList, FaUserAlt} from 'react-icons/fa';
@@ -29,7 +29,6 @@ export default function Navigation(props) {
 	const { Component = <></>} = props;
 	const name = useSelector(state => state.session.stateName);
 	const page = useSelector(state => state.navigation.funcionality);
-	const {points} = useParams();
 	const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -93,6 +92,13 @@ export default function Navigation(props) {
 				setActivities(activate);
 				setBtn(hide);
 			break;
+			case 12: 
+				setLists(activate);
+			break;
+			case 13:
+				setLists(activate);
+				setBtn(hide);
+			break;
 			default:
 				setHome(activate);
 				break;
@@ -110,9 +116,9 @@ export default function Navigation(props) {
 	  }));
 	}
 
-	const get_param = (pathname)=>{
+	const get_param = (pathname, index)=>{
 	  var param = ""
-	  for(var i = 31; i<pathname.length; i++) {
+	  for(var i = index; i<pathname.length; i++) {
 	    param += pathname[i]
 	  }
 	  return param;
@@ -127,7 +133,7 @@ export default function Navigation(props) {
 	    sessionName:"",
 	    isLogged:false
 	  }));
-	  setTimeout(()=>{navigate("/");},1000);
+	  setTimeout(()=>{navigate("/");},500);
 	}
 
 	const go_toCreate = ()=>{
@@ -140,7 +146,10 @@ export default function Navigation(props) {
 	    dispatch(navigation_Actions(8));
 	  }
 	  if(page === 9){  
-	    navigate(`/Activities/create-new-activity/${get_param(window.location.pathname)}`);
+	    navigate(`/Activities/create-new-activity/${get_param(window.location.pathname, 31)}`);
+	  }
+	  if(page === 12){
+	    navigate(`/Lists/add-update-student/${get_param(window.location.pathname, 19)}/${btoa(0)}`);
 	  }
 	}
 	

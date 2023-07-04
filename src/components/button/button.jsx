@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function Button(props) {
 	const [btn_type, setBtn_type] = useState(styles.primary);
 	const {isHide, type, press_btn, text, Icon=<></> } = props;
-	const { danger, success, logout, primary, button, signin, add } = styles;
+	const { warning, danger, success, logout, primary, button, signin, add } = styles;
 
 	const get_btn_type = () => {
 		if (type === "danger") {
@@ -26,6 +26,10 @@ export default function Button(props) {
 		}
 		if(type === "add"){
 		  setBtn_type(add);
+		  return;
+		}
+		if(type === "warning"){
+		  setBtn_type(warning);
 		  return;
 		}
 		setBtn_type(primary);

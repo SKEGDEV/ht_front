@@ -63,7 +63,11 @@ export function Signin(){
 	type:1,
 	exec:()=>{navigate("/Home");}
       }}));
+      return;
     } 
+    dispatch(lock_uiAction({action:1, value:false}));
+    const danger_alert = new notify(msm);
+    danger_alert.error();
     setSignin_form({
       ...signin_form,
       "document_number":"",
@@ -286,7 +290,7 @@ export function Signup(){
        set_value={email}
      />
      <Input 
-       type="text"
+       type="number"
        placeholder="Ingrese su  numero telefonico"
        lblText={"Numero telefonico "+region_code}
        name="phone"

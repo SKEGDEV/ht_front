@@ -1,6 +1,8 @@
 $bg_base:#dfe0ea;
 $number_bg: #f2f3f7;
 $btn_bg: #107acc;
+$btn_warning: #ffc340;
+
 
 @mixin list_container{
   width: 100%;
@@ -78,8 +80,38 @@ $btn_bg: #107acc;
       }
       
     }
+  }  
+}
+.student_item{
+  width: 100%;
+  border-bottom: 1px solid grey;
+  display: flex;
+  flex-direction: row;
+  .index{
+    width: 10%;
+    text-align: center;
+    border-right: 1px solid grey;
+    h4{
+      margin-top: 20px;
+    }
   }
-  
+  .student_info{
+    width: 70%;
+    text-align: center;
+    p, h4{
+      margin-top: 10px;
+    }
+  }
+  .student_btn{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    button{
+      width: 100%;
+      height: 50%;
+      cursor: pointer;
+    }
+  }
 }
 .create_container{
   width: 100%;
@@ -163,3 +195,65 @@ $btn_bg: #107acc;
   }
 }
 
+.warning, .primary{
+  border: none;
+  outline: none;
+  transition: all .5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  svg{
+    color: white;
+  }
+  span{
+    color: white;
+  }
+
+}
+
+.warning{
+  background-color: $btn_warning;
+  &:hover{
+    background-color: white;
+    border: 0.5px solid $btn_warning;
+  }
+  &:hover svg, &:hover span{
+    color: $btn_warning;
+  }
+}
+
+.primary{
+  background-color: $btn_bg;
+  &:hover{
+    background-color: white;
+    border: 0.5px solid $btn_bg;
+  }
+  &:hover svg, &:hover span{
+    color: $btn_bg;
+  }
+}
+
+.container{
+  width: 95%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0 0 190px 2.5%;
+  transform: translateY(90px);
+  padding-top: 45px;
+  .container_btn{
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    .c_left{
+      width: 40%;
+    }
+    .c_rigth{
+      width: 40%;
+      margin-left: 10%;
+    }
+  }
+}

@@ -31,7 +31,8 @@ export default function Activities(){
 
   const goto_getclist = (number, id)=>{
     dispatch(id_Action(id));
-    navigate(`/Classroms/select-clist/${btoa(number)}/${btoa(2)}`)
+    localStorage.setItem("code", "");
+    navigate(`/Classroms/select-clist/${btoa(number)}/${btoa(2)}`);
   }
   
   useEffect(()=>{
@@ -73,7 +74,11 @@ export function Get_activities(){
 
   const get_activities = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/activity/get-activities/${search_id}/${atob(u_number)}`, {}, stateSessionToken);
+    const last_id = localStorage.getItem("code");
+    var url = ""
+    last_id != "" ? url=`/activity/get-activities/${last_id}/${atob(u_number)}`:url=`/activity/get-activities/${search_id}/${atob(u_number)}` 
+    last_id != "" ? dispatch(id_Action(last_id)):dispatch(id_Action(search_id));
+    const request = new consume_api(url, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
@@ -82,9 +87,11 @@ export function Get_activities(){
     }
     setActivities(response);
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);
+    localStorage.setItem("code", "");
   }
 
   const go_toAstudent = (id, points)=>{
+    localStorage.setItem("code", search_id);
     dispatch(id_Action(id));
     dispatch(navigation_Actions(10));
     navigate(`/Activities/get-student-activities/${btoa(points)}`);

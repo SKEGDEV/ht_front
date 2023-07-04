@@ -3,6 +3,7 @@ $danger: #ff0000;
 $primary: #0979b0;
 $transition: all .4s ease-in-out;
 $login: #107acc;
+$warning: #ffc340;
 
 .button{ 
   width: 100%;
@@ -36,6 +37,34 @@ $login: #107acc;
     color: $success;
   }
 }
+
+.warning{
+  width: 100%;
+  background: $warning;
+  border: none;
+  outline: none;
+  padding: 10px 0 10px 0; 
+  border-radius: 10px;
+  span{
+    color: white;
+    font-size: 15px;
+  }
+  svg{
+    color: white;
+    font-size: 20px;
+    transform: translateY(5px);
+    margin-left: 3px;
+  }
+  &:hover{
+    background-color: white;
+    border: 1px solid;
+    border-color: $warning;
+  }
+  &:hover span, &:hover svg{
+    color: $warning;
+  }
+}
+
 
 .primary{
   width: 100%;

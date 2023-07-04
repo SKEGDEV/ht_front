@@ -142,6 +142,7 @@ export function Select_clist(){
   useEffect(()=>{
     get_Clist();
     dispatch(navigation_Actions(8));
+    localStorage.setItem("code","");
   },[]);
 
   const {create_container, create_btn, l_create, r_create} = styles;
