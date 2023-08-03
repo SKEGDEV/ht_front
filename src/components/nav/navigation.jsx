@@ -39,7 +39,8 @@ export default function Navigation(props) {
 		navigation,
 		content,
 		activate,
-		hide
+		hide,
+		search
 	} = styles;
 
 	const set_funcionality = () => {
@@ -171,10 +172,13 @@ export default function Navigation(props) {
   })
 	return (
 		<>
-			<header className={top_var}>
+			<header className={top_var}>	
 				<img src={logo_2} alt="image not found" />
 				<div className={user_container}>
-					<h3>Bienvenido: {" "+name}</h3>
+					<p>Bienvenido: {" "+name}</p>
+				</div>
+				<div className={search}>
+				  <input type="text" placeholder="Buscar..."/>
 				</div>
 			</header>
 			<div className={principal}>	

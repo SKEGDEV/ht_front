@@ -8,9 +8,9 @@ $btn_warning: #ffc340;
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  margin: 0 0 190px 0;
+  margin: 0 0 220px 0;
   background-color: $bg_base;
-  transform: translateY(90px);
+  transform: translateY(120px);
 }
 
 
@@ -256,4 +256,137 @@ $btn_warning: #ffc340;
       margin-left: 10%;
     }
   }
+}
+
+@mixin frm_base{
+  width: 100%;
+  margin: 0 0 30px 0;
+  padding: 0;
+  box-shadow: 0 0 10px 0 rgba($color: #000000, $alpha: 0.6);
+}
+@mixin frm_label_base{
+  background-color:$btn_bg;
+  margin-bottom: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 10px 0 10px 0;
+  span{
+    color: white;
+    margin-left: 5px;
+  }
+  svg{
+    color: white;
+    font-size: 20px;
+    margin-left: 5px;
+  }
+}
+.frm_container{
+  width: 100%;
+  margin: 0 0 40px 0; 
+  @include list_container();
+    background: #fff;
+    .frm_header{ 
+    .frm_header_body{
+      @include frm_base();
+      padding: 10px 0 10px 0;
+      div{
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	padding: 0 0 10px 10px;
+	p{
+	  margin-left: 5px;
+	}
+      }
+      .frm_label{
+	@include frm_label_base();
+	width: 220px;
+      }
+    }
+  }  
+  .frm_body{ 
+    .frm_body_contact{
+      @include frm_base();
+      display: flex;
+      flex-direction: column;
+      a{
+	text-decoration: none;
+	color: black;
+	padding: 20px 10px 20px 10px;
+	margin-bottom: 20px;
+	//box-shadow: 0 0 5px 5px rgba($color: #000000, $alpha: 0.2);
+	border-top: .5px solid;
+	border-bottom: .5px solid;
+	text-align: center;
+	transition: .5s ease-in-out;
+	&:hover{
+	  background-color: $btn_bg;
+	  color: white;
+	}
+      }
+    }
+    .frm_body_container{
+      @include frm_base();
+      .frm_body_card_container{
+	display: flex;
+	flex-wrap: wrap;
+	padding-left: 10px;
+	width: 100%;
+	.frm_body_card{
+	  width: 30%;
+	  padding: 10px 10px 10px 10px;
+	  //box-shadow: 0 0 5px 5px rgba($color: #000000, $alpha: 0.2);
+	  border: .5px solid;
+	  margin-bottom:10px;
+	  border-radius: 5px;
+	  text-align: center;
+	  h4{
+	    margin-bottom: 10px;
+	  }
+	  button{
+	    margin-left: 10px;
+	    margin-bottom: 10px;
+	    padding: 10px;
+	    border-radius: 50%;
+	    border: none;
+	    outline: none;
+	    background-color: $btn_bg;
+	    color: white;
+	    transition: .5s ease-in-out;
+	    cursor: pointer;
+	    &:hover{
+	      border: .5px solid;
+	      border-color: $btn_bg;
+	      color: $btn_bg;
+	      background-color: white;
+	    }
+	  }
+	}
+      }
+    }
+    .frm_label{
+      @include frm_label_base();
+      width: 260px; 
+      margin-bottom: 20px;
+    }
+  }
+
+  .frm_footer{
+    @include frm_base();
+    .frm_fotter_container{
+      text-align: center;
+      padding: 10px;
+      h4{
+	margin-bottom: 10px;
+      }
+      p{
+	margin-bottom: 10px;
+      }
+    }
+    .frm_label{
+      @include frm_label_base();
+      width: 280px;
+    }
+  }
+
 }

@@ -7,10 +7,12 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { lock_uiAction } from '../../actions/lock_uiActions';
 import { navigation_Actions } from '../../actions/navigationActions';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home(){
   const {container, card_container, card} = styles
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(()=>{
     dispatch(lock_uiAction({action:1,value:false}));
@@ -27,14 +29,14 @@ export default function Home(){
             para poder asignarlos a tus cursos y a su vez asignarles
             actividades.
          </p>
-         <button>Empezar</button>
+         <button onClick={()=>{navigate(`/Lists`);}}>Empezar</button>
        </div>
         <div className={card}>
          <h4>Cursos</h4>
          <MdClass/>
          <p>En esta seccion puedes gestionar tus cursos, como agregarlos a tus listados o crear actividades para que puedan ser calificadas consecuentemente.  
          </p>
-         <button>Empezar</button>
+         <button onClick={()=>{navigate(`/Classroms`);}}>Empezar</button>
        </div>
        <div className={card}>
          <h4>Actividades</h4>
@@ -42,7 +44,7 @@ export default function Home(){
          <p>En esta seccion puedes revisar el historial de actividades creadas, como asignarle una nota a tus alumnos, y de igual forma si es necesario quitarles
           puntaje de las actividades y muchas cosas mas.
          </p>
-         <button>Empezar</button>
+         <button onClick={()=>{navigate(`/Activities`);}}>Empezar</button>
        </div>
        <div className={card}>
          <h4>Documentos</h4>

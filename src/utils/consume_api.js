@@ -22,7 +22,10 @@ export class consume_api{
       if(data["auth"]){
 	return data;
       }
-      return data["data"];
+      if(data["data"]){
+	return data["data"];
+      }
+      return data;
     }catch(error){		
       const {response: {data}} = error;
       if(data["msm"] === "Authorization"){

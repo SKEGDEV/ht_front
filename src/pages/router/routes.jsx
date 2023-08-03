@@ -4,7 +4,7 @@ import Navigation from "../../components/nav/navigation.jsx";
 import Not_found from "../not_found/not_found.jsx";
 import Home from "../home/home.jsx";
 import List from "../list/list.jsx";
-import { Get_list_student } from "../list/list.jsx";
+import { Get_list_student, Get_studentFile } from "../list/list.jsx";
 import Classroom from "../classroom/classroom.jsx";
 import {Signin, Signup} from '../login/lg_component.jsx';
 import { Create_list, Add_update_student } from "../list/component.jsx";
@@ -26,6 +26,7 @@ export default function Page_router() {
        <Route path="create-list" element={<Navigation Component={<Create_list/>}/>}/>
        <Route path="get-student/:list_id" element={<Navigation Component={<Get_list_student/>}/>}/>
        <Route path="add-update-student/:list_id/:s_id" element={<Navigation Component={<Add_update_student/>}/>}/>
+       <Route path="get-student-file/:s_id/:list_id" element={<Navigation Component={<Get_studentFile/>}/>}/>
      </Route>
      <Route path="/Classroms">
        <Route index element={<Navigation Component={<Classroom/>}/>}/>
