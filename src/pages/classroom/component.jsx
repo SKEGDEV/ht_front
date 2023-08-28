@@ -17,7 +17,7 @@ export function Create_classroom(){
     "class_name":"",
     "type":0
   });
-  const {create_container, l_create, r_create, create_btn} = styles;
+  const {create_container, input_container, l_create, r_create, create_btn, inputs} = styles;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector(state=>state.session.stateSessionToken);
@@ -86,6 +86,8 @@ export function Create_classroom(){
 
   return(
     <div className={create_container}>
+    <div className={input_container}>
+    <div className={inputs}>
      <Input
      type="text" 
      placeholder="Ingrese un nombre para su curso"
@@ -94,6 +96,8 @@ export function Create_classroom(){
      set_value={class_name}
      name="class_name"
     />
+    </div>
+    </div>
     <Select
      msm=" el tipo de curso deseado"
      options={types}
@@ -101,6 +105,7 @@ export function Create_classroom(){
      name="type"
      set_value={type}
     />
+    
     <div className={create_btn}>
     <div className={l_create}>
      <Button

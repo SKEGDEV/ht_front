@@ -52,14 +52,14 @@ export default function Home(){
          <p>En esta seccion puedes generar tus documentos referentes a tus actividades y alumnos, tales como boletas de calificaciones, 
          cuadros de apreciacion, y mucho mas.
          </p>
-         <button>Empezar</button>
+         <button onClick={()=>{navigate(`/Documents`);}}>Empezar</button>
        </div>
        <div className={card}>
          <h4>Perfil</h4>
          <FaUserCog/>
          <p>En esta seccion puedes actualizar tu informacion personal, como nombres, apellidos, contraseña asi como cancelar tu cuenta si asi lo deseas.
          </p>
-         <button>Empezar</button>
+         <button  onClick={()=>{navigate(`/Profile`);}}>Empezar</button>
        </div>
      </div>
     </div>

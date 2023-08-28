@@ -129,9 +129,12 @@ $btn_bg: #107acc;
   width: 95%;
   height: 100%; 
   overflow-x: hidden;
-  margin: 0 0 190px 2.5%;
-  transform: translateY(90px);
+  margin: 0 0 220px 2.5%;
+  transform: translateY(120px);
   padding-top: 45px;
+  input{
+    width: 94%;
+  }
   .form_btn{
     width: 100%;
     display: flex;

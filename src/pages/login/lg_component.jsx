@@ -117,6 +117,8 @@ export function Signup(){
   const [params, setParams] = useState({
     "first_name":"",
     "last_name":"",
+    "school_name":"",
+    "school_direction":"",
     "birthday":"",
     "usr_password":"",
     "confirm_password":"",
@@ -129,7 +131,7 @@ export function Signup(){
   const [region_code, setRegionCode] = useState("");
   const [country_doc, setCountry_doc] = useState("");
 
-  const{first_name, last_name, birthday, usr_password, confirm_password, document, email, phone, document_type, country_id}=params;
+  const{first_name, last_name, school_name, school_direction, birthday, usr_password, confirm_password, document, email, phone, document_type, country_id}=params;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -218,6 +220,8 @@ export function Signup(){
       ...params,
       "first_name":"",
       "last_name":"",
+      "school_name":"",
+      "school_direction":"",
       "birthday":"",
       "usr_password":"",
       "confirm_password":"",
@@ -250,6 +254,22 @@ export function Signup(){
        name="last_name"
        get_value={get_params}
        set_value={last_name}
+     />
+     <Input 
+       type="text"
+       placeholder="Ingrese el nombre del establecimiento"
+       lblText="Nombres"
+       name="school_name"
+       get_value={get_params}
+       set_value={school_name}
+     />
+     <Input
+       type="text"
+       placeholder="Ingrese la direccion del establecimiento"
+       lblText="Apellidos"
+       name="school_direction"
+       get_value={get_params}
+       set_value={school_direction}
      />
      <Input
        type="date"

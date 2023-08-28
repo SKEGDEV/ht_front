@@ -138,12 +138,12 @@ export default function Navigation(props) {
 	}
 
 	const go_toCreate = ()=>{
-	  if(page ===2){
-	    navigate("create-list");
+	  if(page === 2){
+	    navigate("/Lists/create-list");
 	    dispatch(navigation_Actions(7));
 	  }
-	  if(page===3){
-	    navigate("create-classroom");
+	  if(page=== 3){
+	    navigate("/Classroms/create-classroom");
 	    dispatch(navigation_Actions(8));
 	  }
 	  if(page === 9){  

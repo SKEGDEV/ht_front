@@ -95,9 +95,12 @@ $success: #5ccb5f;
   width: 95%;
   height: 100%;
   overflow: hidden;
-  margin: 0 0 190px 2.5%;
-  transform: translateY(90px);
+  margin: 0 0 220px 2.5%;
+  transform: translateY(120px);
   padding-top: 45px;
+  .input_container{
+    width: 96%; 
+  }
   .create_btn{
     width: 100%;
     display: flex;
@@ -142,4 +145,8 @@ $success: #5ccb5f;
       }
     }
   }
+}
+
+.inputs{
+  width: 99%;
 }

@@ -2,6 +2,7 @@ import styles from './list.module.scss';
 import { useEffect, useState} from 'react';
 import Input from '../../components/input/input';
 import Button from '../../components/button/button';
+import Select from '../../components/select/select';
 import {MdCancel, MdSkipNext, MdAddCircle, MdSave, MdDelete, MdUpdate} from 'react-icons/md';
 import {IoIosSkipBackward} from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { lock_uiAction } from '../../actions/lock_uiActions';
 import { navigation_Actions } from '../../actions/navigationActions';
-var index = 1;
 
 export function Create_list(){ 
   const [next, setNext] = useState("");
@@ -28,13 +28,22 @@ export function Create_list(){
 	 table_item,
 	 table_index,
 	 table_name,
-	 table_btn} = styles;
+	 table_btn,
+	 inputsC} = styles;
 	
   const [expand, setExpand] = useState(student);
-  const [list_name, setListName] = useState("");
   const [students, setStudent] = useState([]);
-  const [params, setParams]=useState({ 
-    "index":0,
+  const [catalogs, setCatalog] = useState({
+    oGrade:[],
+    oSection:[],
+    oLevel:[]
+  });
+  const [listParams, setListParams] = useState({
+    "grade":0,
+    "section":0,
+    "level":0
+  });
+  const [params, setParams]=useState({
     "first_name":"",
     "last_name":"",
     "code":"",
@@ -43,6 +52,7 @@ export function Create_list(){
     "mother_number":"",
     "phone_number":""
   });
+  const {grade, section, level} = listParams;
   const {first_name, last_name, code, birthday, father_number, mother_number, phone_number} = params; 
   const navigate = useNavigate(); 
   const dispatch = useDispatch();
@@ -50,12 +60,14 @@ export function Create_list(){
   const get_value = (name, value)=>{
     setParams({
       ...params,
-      "index":index,
       [name]:value
     });  
    }
-  const get_listName = (name, value)=>{
-    setListName(value);
+  const get_listParams = (name, value)=>{
+    setListParams({
+      ...listParams,
+      [name]:value
+    });
   }
   const add = ()=>{
     if(!first_name || !last_name || !code || !birthday){
@@ -64,7 +76,6 @@ export function Create_list(){
       return;
     }
     students.push(params);
-    index+=1;
     setParams({
     ...params, 
     "first_name":"",
@@ -78,8 +89,8 @@ export function Create_list(){
   }
   const remove = (id)=>{
     var temp = []
-    students.map(d=>{
-      if(d["index"] != id){
+    students.map((d, index)=>{
+      if(index != id){
         temp.push(d);
       }
     });
@@ -93,7 +104,7 @@ export function Create_list(){
     }
     dispatch(lock_uiAction({action:1, value:true}));
     const data = {
-      name:list_name,
+      listParams,
       data:students
     }
     const request = new consume_api("/student/create-student-list", data, token);
@@ -109,14 +120,35 @@ export function Create_list(){
     }
   }
   const change_form = ()=>{
-    if(!list_name){
-      const warning = new notify("El nombre del listado es requerido");
+    if(!grade || !section || !level){
+      const warning = new notify("Por favor seleccione informacion valida");
       warning.warning();
       return; 
     }
     setNext(step);
     setExpand("");
   }
+  const get_list_catalog = async()=>{
+    dispatch(lock_uiAction({action:1, value:true}));
+    const request = new consume_api("/student/get-catalogs", {}, token);
+    const response = await request.get_petitions();
+    if(response["msm"]){
+      dispatch(lock_uiAction({action:1, value:false}));
+      navigate("/Lists");
+      return;
+    }
+    setCatalog({
+      ...catalogs,
+      oGrade:response["oGrade"],
+      oSection:response["oSection"],
+      oLevel:response["oLevel"]
+    });
+    setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}));},250);
+  }
+  
+  useEffect(()=>{
+    get_list_catalog();
+  },[]) 
 
   return(
     <div className={create_container}>
@@ -124,16 +156,30 @@ export function Create_list(){
       <div className={slider_item}>
         <div className={item_header}>
          <h4>Paso 1</h4>
-         <p>Agregale un nombre a tu listado, como por ejemplo: Aula 6to B</p>
+         <p>Agrega la informacion de tu listado, como la seccion, grado y nivel (puede ser primario o basico)</p>
         </div>
         <div className={item_body}>
-          <Input
-           type="text"
-           lblText="Nombre *"
-           placeholder="Ingrese el nombre de su listado"
-           set_value={list_name}
-           get_value={get_listName}
-          />
+         <Select
+           options={catalogs.oGrade}
+           msm=" el grado de su listado"
+           set_value={grade}
+           name="grade"
+           get_value={get_listParams}
+         />
+         <Select
+           options={catalogs.oSection}
+           msm=" la seccion de su listado"
+           set_value={section}
+           name="section"
+           get_value={get_listParams}
+         />
+         <Select
+           options={catalogs.oLevel}
+           msm=" el nivel de su listado"
+           set_value={level}
+           name="level"
+           get_value={get_listParams}
+         />
         </div>
         <div className={item_footer}>
          <div className={f_left}>
@@ -164,6 +210,7 @@ export function Create_list(){
          />
         </div>
         <div className={item_body}>
+         <div className={inputsC}>
          <Input
            type="text"
            lblText="Nombres *"
@@ -199,7 +246,7 @@ export function Create_list(){
          <Input 
            type="number"
            lblText="Padre de familia"
-           placeholder="Ingrese el numero de telefono del padre o encargado"
+           placeholder="Ingrese el numero de telefono del padre"
            name="father_number"
            set_value={father_number}
            get_value={get_value}
@@ -207,7 +254,7 @@ export function Create_list(){
          <Input
            type="number"
            lblText="Madre de familia"
-           placeholder="Ingrese el numero de telefono de la madre o encargado"
+           placeholder="Ingrese el numero de telefono de la madre"
            name="mother_number"
            set_value={mother_number}
            get_value={get_value}
@@ -220,6 +267,7 @@ export function Create_list(){
            set_value={phone_number}
            get_value={get_value}
           />
+    </div>
         </div>
         <div className={item_footer}>
           <div className={f_left}>
@@ -239,19 +287,19 @@ export function Create_list(){
            />
          </div>        
         </div>
-        {students.map(d=>(
-        <div key={d[0]} className={table_item}>
+        {students.map((d, index)=>(
+        <div key={index} className={table_item}>
          <div className={table_index}>
-           <h1>{d["index"]}</h1>
+           <h1>{index+1}</h1>
          </div>
          <div className={table_name}>
-           <h4>{d["first_name"]+" "+d["last_name"]}</h4>
+           <h4>{`${d["first_name"]} ${d["last_name"]}`}</h4>
          </div>
          <div className={table_btn}>
            <Button
             Icon={MdDelete}
             type="danger"
-	    press_btn={()=>{remove(d["index"]);}}
+	    press_btn={()=>{remove(index);}}
            />
          </div>
        </div>
@@ -265,7 +313,7 @@ export function Create_list(){
 export function Add_update_student(){ 
   const {list_id, s_id} = useParams();
   const {stateSessionToken} = useSelector(state=> state.session);
-  const {container, container_btn, c_rigth, c_left} = styles
+  const {container, container_btn, c_rigth, c_left, inputs} = styles
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [params, setParams] = useState({
@@ -372,6 +420,7 @@ export function Add_update_student(){
 
   return(
     <div className={container}>
+    <div className={inputs}>
       <Input
        type="text"
        lblText="Nombres*"
@@ -408,7 +457,7 @@ export function Add_update_student(){
       <Input
        type="number"
        lblText="Numero padre"
-       placeholder="Por favor ingrese el numero telefonico del padre"
+       placeholder="Ingrese el numero de telefono del padre"
        name="father_number"
        set_value={father_number}
        get_value={onChangeInput}
@@ -416,7 +465,7 @@ export function Add_update_student(){
       <Input
        type="number"
        lblText="Numero madre"
-       placeholder="Por favor ingrese el numero telefonico de la madre"
+       placeholder="Ingrese el numero de telefono de la madre"
        name="mother_number"
        set_value={mother_number}
        get_value={onChangeInput}
@@ -429,6 +478,7 @@ export function Add_update_student(){
        set_value={phone_number}
        get_value={onChangeInput}
      />
+    </div>
       <div className={container_btn}>
         <div className={c_left}>
         <Button

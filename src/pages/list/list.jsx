@@ -17,7 +17,6 @@ export default function List(){
   const [params, setParams] = useState([]);
   const {list} = styles;
   const dispatch = useDispatch();
-  var index = 0;
 
   const get_lists = async ()=>{
     dispatch(lock_uiAction({action:1,value:true}));
@@ -39,8 +38,8 @@ export default function List(){
 
   return(
     <div className={list}>
-     {params.map(d=>( 
-     <List_item id={d[0]} key={d[0]} name={d[1]} date={new Date(d[2]).toLocaleDateString()} l_status={d[3]} number={index+=1}/> 
+     {params.map((d, index)=>( 
+     <List_item id={d[0]} key={d[0]} name={d[1]} date={new Date(d[2]).toLocaleDateString()} l_status={d[3]} number={index+1}/> 
      ))}
     </div>
   )
@@ -72,9 +71,8 @@ export function Get_list_student(){
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {session:{stateSessionToken}} = useSelector(state => state);
-  const {list, student_item, index, student_info, student_btn, warning, primary} = styles;
+  const {list, student_item, indexl, student_info, student_btn, warning, primary} = styles;
   const [student, setStudent] = useState([]);
-  var number = 0;
 
   const get_student = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
@@ -97,10 +95,10 @@ export function Get_list_student(){
 
   return(
     <div className={list}>
-    {student.map(d=>(
+    {student.map((d, index)=>(
       <div key={d[0]} className={student_item}>
-        <div className={index}>
-          <h4>{number+=1}</h4>
+        <div className={indexl}>
+          <h4>{index+1}</h4>
         </div>
         <div className={student_info}>
           <h4>{d[1]}</h4>

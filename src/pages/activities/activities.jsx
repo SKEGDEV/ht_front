@@ -15,10 +15,11 @@ export default function Activities(){
   const navigate = useNavigate();
   const {session:{stateSessionToken}} = useSelector(state=>state);
   const {crom_container, crom_item, i_top, i_bottom} = styles;
+  const {year} = useParams();
 
   const get_crooms = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api("/classroom/get-classrooms", {}, stateSessionToken);
+    const request = new consume_api(`/classroom/get-classrooms/1/${atob(year)}`, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));

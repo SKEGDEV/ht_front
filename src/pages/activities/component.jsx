@@ -81,12 +81,12 @@ export function Qualified(){
     <div key={d[0]} className={form_container}>
       <Input
        type="text"
-       lblText="Nombre completo"
+       placeholder="Nombre completo"
        set_value={d[0]}
       />
       <Input
        type="text"
-       lblText="Actividad a calificar"
+       placeholder="Actividad a calificar"
        set_value={d[2]}
       />
       <Input
