@@ -1,11 +1,16 @@
+$bg_base:#dfe0ea;
 $btn_bg: #107acc;
 $transition: all 0.5s ease-in-out;
 
-.container{
+@mixin container{
   width: 100%;
   height: 100%;
   margin-bottom: 250px;
   transform: translateY(120px);
+}
+
+.container{
+  @include container();
   .card_container{
     width: 100%;
     height: 100%;
@@ -45,6 +50,62 @@ $transition: all 0.5s ease-in-out;
 	background-color: white;
 	border: 2px solid;
 	border-color: $btn_bg;
+      }
+    }
+  }
+}
+
+.form_container{
+  @include container();
+  transform: translateY(140px);
+  width: 95%;
+  margin-left: 2.5%;
+  .form_btn{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin: 0 0 20px 0;
+      .l_btn{
+	width: 40%;
+      }
+      .r_btn{
+	width: 40%;
+	margin-left: 10%;
+      }
+    }
+ 
+}
+
+.s_container{
+  @include container();
+  background-color: $bg_base;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 225px;
+  .s_item{
+    width: 100%;
+    display:flex; 
+    flex-direction: row;
+    border-bottom: 1px solid gray;
+    .item_l{
+      padding-top: 15px;
+      padding-bottom: 15px;
+      width: 70%;
+      h4, p{
+	width: 95%;
+	margin-left: 2.5%;
+	text-align: center;
+      } 
+    }
+    .item_r{
+      width: 30%;
+      button{
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
       }
     }
   }

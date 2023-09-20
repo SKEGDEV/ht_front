@@ -11,6 +11,9 @@ $border-color: #dddddd;
     margin-bottom: 40px;
     position: relative;
     width: 100%;
+    p{
+      display: none;
+    }
     label {
         display: block;
         position: absolute;
@@ -54,4 +57,22 @@ $border-color: #dddddd;
             }
         }
     }
+}
+
+.notValid{
+  p{
+    color: red;
+    font-size: 12px;
+    margin-left: 5px;
+    display: block;
+  }
+  label{
+    color:red;
+  }
+  input {
+    border: 1px solid red;
+    &:focus{
+      border: 1px solid red;
+    }
+  }
 }

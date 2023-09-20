@@ -103,3 +103,45 @@ export class consume_api{
   }
 
 }
+
+export const Api_routes = {
+  //ClassroomsRoutes
+  get_classroom:'/classroom/get-classrooms/1/',
+  get_classroomYears:'/classroom/get-classrooms/2/0',
+  get_classroomList: '/classroom/get-clist/',
+  get_classroomListStudent:'/classroom/get-all-unit-student/',
+  post_createClassroom:'/classroom/create-classroom',
+  post_studentToClassroom:'/classroom/student_2_classroom',
+
+  //ActivityRoutes
+  get_activities:'/activity/get-activities/',
+  get_studentActivities:'/activity/get-activity-students/',
+  get_studentActivityInfo:'/activity/get-student-information/',
+  put_qualifiedActivity:'/activity/qualified-activity',
+  post_createActivity:'/activity/create-activity',
+
+  //StudentRoutes
+  get_allList:'/student/get-all-list',
+  get_allStudentOffList:'/student/get-all-student/',
+  get_studentFile:'/student/get-student-file/',
+  get_studentToUpdate:'/student/get-student-2-update/',
+  put_updateStudent:'/student/update-student-information',
+  post_AddStudentOutList:'/student/create-student-out-list',
+  post_createStudentList:'/student/create-student-list',
+
+  //CatalogRoutes
+  get_activityTypeCatalog:'/catalogs/get-catalog/4/0',
+  get_activitySubTypeCatalog:'/catalogs/get-catalog/5/0',
+  get_studentCatalogs:'/student/get-catalogs',
+  get_classroomTypeCatalog:'/catalogs/get-catalog/3/0',
+  get_createAccountCountryCatalog:'/catalogs/get-catalog/1/0',
+  get_createAccountDocumentCatalog:'/catalogs/get-catalog/2/',
+
+  //SessionRoutes
+  get_verifySession:'/auth/verify-session',
+  post_Signin:'/auth/login',
+  post_Signup:'/auth/create-account',
+
+  //rpt Routes
+  post_generateReport:'/rpt/generate-report-pdf'
+}

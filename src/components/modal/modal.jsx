@@ -45,7 +45,7 @@ export default function Modal(){
 
   useEffect(()=>{
     modal_OpenClose();
-  })
+  },[isOpen])
 
   return(
     <div className={modal_container+" "+isHide}> 

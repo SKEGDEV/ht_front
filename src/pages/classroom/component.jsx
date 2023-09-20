@@ -2,7 +2,7 @@ import styles from './classroom.module.scss';
 import Input from '../../components/input/input';
 import Select from '../../components/select/select';
 import { useState, useEffect } from 'react';
-import { consume_api } from '../../utils/consume_api';
+import { consume_api, Api_routes} from '../../utils/consume_api';
 import {MdCancel, MdSave, MdAddCircle} from 'react-icons/md';
 import Button from '../../components/button/button';
 import { useSelector, useDispatch } from 'react-redux';
@@ -31,7 +31,7 @@ export function Create_classroom(){
   }
 
   const get_types = async ()=>{
-    const request = new consume_api("/catalogs/get-catalog/3/0", {}, "");
+    const request = new consume_api(Api_routes.get_classroomTypeCatalog, {}, "");
     setTypes(await request.get_petitions());
   }
 
@@ -71,7 +71,7 @@ export function Create_classroom(){
       return;
     }
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api("/classroom/create-classroom", params, token);
+    const request = new consume_api(Api_routes.post_createClassroom, params, token);
     const response = await request.post_petitions();
     if(response.data){
       unlock_ui(1, response);
@@ -141,7 +141,7 @@ export function Upload_listing(){
       navigate("/Classroms");
       return;
     }
-    const request = new consume_api("/student/get-all-list", {}, stateSessionToken);
+    const request = new consume_api(Api_routes.get_allList, {}, stateSessionToken);
     setLists(await request.get_petitions());
   }
 
@@ -156,7 +156,7 @@ export function Upload_listing(){
       classroom_id: search_id,
       list_id: list_id
     }
-    const request = new consume_api("/classroom/student_2_classroom", params, stateSessionToken);
+    const request = new consume_api(Api_routes.post_studentToClassroom, params, stateSessionToken);
     const response = await request.post_petitions();
     if(response["not_available"]){
       setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);

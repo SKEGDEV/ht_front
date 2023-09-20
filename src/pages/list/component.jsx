@@ -7,7 +7,7 @@ import {MdCancel, MdSkipNext, MdAddCircle, MdSave, MdDelete, MdUpdate} from 'rea
 import {IoIosSkipBackward} from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../../utils/notify';
-import { consume_api } from '../../utils/consume_api';
+import { consume_api, Api_routes } from '../../utils/consume_api';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { lock_uiAction } from '../../actions/lock_uiActions';
@@ -107,7 +107,7 @@ export function Create_list(){
       listParams,
       data:students
     }
-    const request = new consume_api("/student/create-student-list", data, token);
+    const request = new consume_api(Api_routes.post_createStudentList, data, token);
     const msm = await request.post_petitions();
     if(msm["msm"]){
       setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}));}, 500);
@@ -130,7 +130,7 @@ export function Create_list(){
   }
   const get_list_catalog = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api("/student/get-catalogs", {}, token);
+    const request = new consume_api(Api_routes.get_studentCatalogs, {}, token);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
@@ -338,7 +338,7 @@ export function Add_update_student(){
 
   const get_2Update = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/student/get-student-2-update/${atob(s_id)}`, {}, stateSessionToken);
+    const request = new consume_api(`${Api_routes.get_studentToUpdate}${atob(s_id)}`, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(response["msm"]){ 
       dispatch(lock_uiAction({action:1, value:false}));
@@ -377,7 +377,7 @@ export function Add_update_student(){
 
   const update_student = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/student/update-student-information`, params, stateSessionToken);
+    const request = new consume_api(`${Api_routes.put_updateStudent}`, params, stateSessionToken);
     const response = await request.put_petitions(); 
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
     dispatch(lock_uiAction({action:2, value:{
@@ -395,7 +395,7 @@ export function Add_update_student(){
       return;
     }
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/student/create-student-out-list`, params, stateSessionToken);
+    const request = new consume_api(`${Api_routes.post_AddStudentOutList}`, params, stateSessionToken);
     const response = await request.post_petitions();
     if(response["msm"]){
       setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500)

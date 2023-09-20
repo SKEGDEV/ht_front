@@ -5,26 +5,33 @@ import Select from "../../components/select/select";
 import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {notify} from '../../utils/notify.js';
-import {consume_api} from '../../utils/consume_api.js';
+import {consume_api, Api_routes} from '../../utils/consume_api.js';
 import { useDispatch, useSelector } from "react-redux";
 import { sessionUserAction } from "../../actions/sessionAction";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import {RiLoginBoxFill} from "react-icons/ri";
 import {BsPersonFillAdd} from 'react-icons/bs';
+import tools from "../../utils/tools";
 
 export function Signin(){
   const {lg_form, signup_btn} = styles; 
   const [signin_form, setSignin_form] = useState({
+    "document_type":"0",
+    "country_id":"0",
     "document_number":"",
     "password":""
   });
-  const {document_number, password} = signin_form;
+  const {document_number, password, document_type, country_id} = signin_form;
+  const [country, setCountry] = useState([]);
+  const [docType, setDocType] = useState([]);
+  const [country_doc, setCountry_doc] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
 
   const isAuth = async()=>{
-    const request = new consume_api("/auth/verify-session", {}, stateSessionToken);
+    const request = new consume_api(Api_routes.get_verifySession, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(isLogged && response["msm"] === "success"){
       navigate(`/Home`);
@@ -33,15 +40,67 @@ export function Signin(){
     
   }
 
-  const set_lg_params = (name, value) =>{
+  const get_catalogs = async()=>{
+    dispatch(lock_uiAction({action:1, value:true}));
+    const get_country = new consume_api(Api_routes.get_createAccountCountryCatalog,{},"");  
+    setCountry(await get_country.get_petitions());
+    setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
+    return; 
+  }
+  const [oValidate, setOValidate] = useState({
+    documentInput:{
+      expression:'',
+      validMessage:''
+    } 
+  });
+
+  const set_lg_params =async (name, value) =>{
+    name === "country_id"?
     setSignin_form({
       ...signin_form,
-      [name]:value
+      [name]:value,
+      ["document_type"]:"0"
+    })
+    :
+    setSignin_form({
+      ...signin_form,
+      [name]:value 
     });
+    if(name === "country_id"){ 
+      dispatch(lock_uiAction({action:1, value:true}));
+      setCountry_doc("");
+      const get_doc = new consume_api(Api_routes.get_createAccountDocumentCatalog+value,{},"");
+      setDocType(await get_doc.get_petitions());  
+      setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
+      return;
+    }
+    if(name === "document_type"){
+      var type = "";
+      var expression='';
+      var msm = '';
+
+      docType.map(d=>{
+	if(d[0]==value){
+	  type=`${d[1]}`
+	  expression=`${d[2]}`
+	  msm=d[3]
+	}
+      });
+      setCountry_doc(type);
+      setOValidate({
+	...oValidate,
+	documentInput:{
+	  expression:expression,
+	  validMessage:msm
+	}
+      });
+      return;
+    }
   }
 
   useEffect(()=>{
     isAuth();
+    get_catalogs();
   },[]);
   
   const signin = async()=>{
@@ -51,7 +110,7 @@ export function Signin(){
       return;
     }
     dispatch(lock_uiAction({action:1, value:true}));
-    const call_signin = new consume_api("/auth/login", signin_form, ""); 
+    const call_signin = new consume_api(Api_routes.post_Signin, signin_form, ""); 
     const data = await call_signin.post_petitions(); 
     const{token, msm, name} = data;
     if(token){
@@ -79,13 +138,30 @@ export function Signin(){
   return(
     <> 
       <div className={lg_form}>
+     <Select
+       options={country}
+       msm="su pais de residencia"
+       name="country_id"
+       get_value={set_lg_params}
+       set_value={country_id}
+     />
+     <Select
+       options={docType}
+       msm="el tipo de documento a utilizar"
+       name="document_type"
+       get_value={set_lg_params}
+       set_value={document_type}
+       is_disabled={country_id > 0? false:true}
+     />
       <Input
        type="text"
-       placeholder="Ingrese su numero de documento"
+       placeholder={`Ingrese su No.${country_doc}`}
        lblText="No. Documento"
        set_value={document_number}
        get_value={set_lg_params}
        name="document_number"
+       is_disabled={document_type>0?false:true}
+       itemValid={oValidate.documentInput}
       />
       <Input
        type="password"
@@ -103,7 +179,7 @@ export function Signin(){
        Icon={RiLoginBoxFill}
       />  
        <div className={signup_btn}>
-        <span>Aun no tienes cuenta?<Link to="/signup">Crear cuenta</Link></span> 
+        <Link to="/signup">{`Aun no tienes cuenta? Crear cuenta`}</Link> 
        </div> 
       </div>
     </>
@@ -128,49 +204,90 @@ export function Signup(){
     "document_type":"0",
     "country_id":"0"
   });
+
   const [region_code, setRegionCode] = useState("");
   const [country_doc, setCountry_doc] = useState("");
+  const oTools = new tools();
 
   const{first_name, last_name, school_name, school_direction, birthday, usr_password, confirm_password, document, email, phone, document_type, country_id}=params;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [oValidate, setOValidate] = useState({
+    documentInput:{
+      expression:'',
+      validMessage:''
+    },
+    emailInput:{
+      expression:'^[^@]+@[^@]+\.[a-zA-Z]{2,}$',
+      validMessage:'Ejemplo: ejemplo@mail.com'
+    },
+    numberInput:{
+      expression:'^[0-9]{8}$',
+      validMessage:'Ejemplo: 12345678'
+    }
+  });
 
   const get_catalogs = async()=>{
-    const get_country = new consume_api("/catalogs/get-catalog/1/0",{},"");  
+    dispatch(lock_uiAction({action:1, value:true}));
+    const get_country = new consume_api(Api_routes.get_createAccountCountryCatalog,{},"");  
     setCountry(await get_country.get_petitions());
+    setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
     return; 
   }
 
   const get_params= async(name, value)=>{
+    name === "country_id"?
     setParams({
       ...params,
-      [name]:value
+      [name]:value,
+      ["document_type"]:"0"
+    })
+    :
+    setParams({
+      ...params,
+      [name]:value 
     });
     if(name === "country_id"){ 
-      const get_doc = new consume_api("/catalogs/get-catalog/2/"+value,{},"");
+      dispatch(lock_uiAction({action:1, value:true}));
+      setCountry_doc("");
+      const get_doc = new consume_api(Api_routes.get_createAccountDocumentCatalog+value,{},"");
       setDocType(await get_doc.get_petitions()); 
       var code="";
       country.map(d=>{
 	if(d[0]==value){
-	  code = `+${d[2]} ${d[3]}`; 
+	  code = `${d[2]}`; 
 	}
       });
-      setRegionCode(code);
+      setRegionCode(code); 
+      setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
       return;
     }
     if(name === "document_type"){
       var type = "";
+      var expression='';
+      var msm = '';
+
       docType.map(d=>{
 	if(d[0]==value){
-	  type=`No. ${d[1]}`
+	  type=`${d[1]}`
+	  expression=`${d[2]}`
+	  msm=d[3]
 	}
       });
       setCountry_doc(type);
+      setOValidate({
+	...oValidate,
+	documentInput:{
+	  expression:expression,
+	  validMessage:msm
+	}
+      });
+      return;
     }
   }
 
   const clean_params=()=>{
-    if(!first_name || !last_name || !usr_password || !confirm_password || !document || !email || !phone || !document_type || !country_id){
+    if(!first_name || !last_name || !usr_password || !confirm_password || !email || !phone || !document_type || !country_id){
       return false
     }
     if(usr_password !== confirm_password){
@@ -181,6 +298,14 @@ export function Signup(){
     if(!validate_age()){
       const isKid = new notify("Se requiere que el usuario sea mayor de edad");
       isKid.warning();
+      return false;
+    }
+    if(!oTools.validateRegEx({regExp:oValidate.documentInput.expression, plainText:document})){
+      const documentNotValid = new notify("Por favor ingrese un numero de documento valido");
+      documentNotValid.warning();
+      return false;
+    }
+    if(!oTools.validateRegEx({regExp:oValidate.emailInput.expression, plainText:email}) || !oTools({regExp:oValidate.numberInput.expression, plainText:phone})){
       return false;
     }
     return true
@@ -203,7 +328,7 @@ export function Signup(){
       return;
     }
     dispatch(lock_uiAction({action:1,value:true}));
-    const create_account = new consume_api("/auth/create-account", params, "");
+    const create_account = new consume_api(Api_routes.post_Signup, params, "");
     const data = await create_account.post_petitions();
     const {token, msm, name} = data
     if(token){
@@ -215,7 +340,11 @@ export function Signup(){
 	type:1,
 	exec:()=>{navigate("/Home");}
       }}));
+      return;
     }
+    const userExist = new notify(msm);
+    userExist.warning();
+    dispatch(lock_uiAction({action:1, value:false}));
     setParams({
       ...params,
       "first_name":"",
@@ -292,14 +421,16 @@ export function Signup(){
        name="document_type"
        get_value={get_params}
        set_value={document_type}
+       is_disabled={country_id > 0? false:true}
      />
      <Input
        type="text"
-       placeholder="Ingrese su numero de documento"
-       lblText={"No. Documento "+country_doc}
+       placeholder={`Ingrese su No. De ${country_doc}`}
        name="document"
        get_value={get_params}
        set_value={document}
+       is_disabled={document_type > 0? false:true}
+       itemValid={oValidate.documentInput}
      />
      <Input 
        type="email"
@@ -308,14 +439,15 @@ export function Signup(){
        name="email"
        get_value={get_params}
        set_value={email}
+       itemValid={oValidate.emailInput}
      />
      <Input 
        type="number"
-       placeholder="Ingrese su  numero telefonico"
-       lblText={"Numero telefonico "+region_code}
+       placeholder={`Ingrese su  numero telefonico ${region_code}`}
        name="phone"
        get_value={get_params}
        set_value={phone}
+       itemValid={oValidate.numberInput}
      />
      <Input 
        type="password"
@@ -340,7 +472,7 @@ export function Signup(){
        press_btn={signup}
      />
      <div className={signin_btn}>
-        <span>Ya tienes cuenta?<Link to="/">Iniciar sesion</Link></span>  
+        <Link to="/">{`Ya tienes cuenta? iniciar sesion`}</Link>  
      </div>
     </div>
   )

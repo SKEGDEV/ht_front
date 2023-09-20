@@ -27,15 +27,13 @@ $top_bg:#107acc;
     flex-direction: row;
     width: 100%;
     margin-top: 30px;
+    text-align: center;
     a{
+      width: 100%;
+      text-align: center;
      text-decoration: none;
      font-weight: bold;
-     transform: translateX(-55px);
      color: black;
-    }
-    span{
-      text-align: center;
-      width: 100%;
     }
   }
  select{

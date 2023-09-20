@@ -1,6 +1,6 @@
 import styles from './list.module.scss';
 import Button from '../../components/button/button';
-import { consume_api } from '../../utils/consume_api';
+import { consume_api, Api_routes } from '../../utils/consume_api';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {FaEye} from 'react-icons/fa';
@@ -20,7 +20,7 @@ export default function List(){
 
   const get_lists = async ()=>{
     dispatch(lock_uiAction({action:1,value:true}));
-    const request = new consume_api("/student/get-all-list", {}, token);
+    const request = new consume_api(Api_routes.get_allList, {}, token);
     const response = await request.get_petitions();
     if(response["msm"]){
       setParams([]);
@@ -76,7 +76,7 @@ export function Get_list_student(){
 
   const get_student = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/student/get-all-student/${atob(list_id)}`,{},stateSessionToken);
+    const request = new consume_api(`${Api_routes.get_allStudentOffList}${atob(list_id)}`,{},stateSessionToken);
     const response = await request.get_petitions();
     if(response['msm']){
       setStudent([]);
@@ -136,7 +136,7 @@ export function Get_studentFile(){
 
   const get_file = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const student_request = new consume_api(`/student/get-student-file/${atob(s_id)}`, {}, stateSessionToken);
+    const student_request = new consume_api(`${Api_routes.get_studentFile}${atob(s_id)}`, {}, stateSessionToken);
     const o_response = await student_request.get_petitions();
     if(o_response['msm']!=="success"){
       dispatch(lock_uiAction({action:1, value:false}));

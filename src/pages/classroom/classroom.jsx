@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { navigation_Actions } from "../../actions/navigationActions";
 import { useEffect, useState } from "react";
-import { consume_api } from "../../utils/consume_api";
+import { consume_api, Api_routes } from "../../utils/consume_api";
 import styles from './classroom.module.scss';
 import {MdFormatListBulletedAdd, MdCancel,MdCheckBox, MdLocalPrintshop, MdQueryStats, MdDoubleArrow} from 'react-icons/md'
 import { lock_uiAction } from "../../actions/lock_uiActions";
@@ -21,7 +21,7 @@ export function Classroom_year(){
 
   const get_year = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api("/classroom/get-classrooms/2/0", {}, token);
+    const request = new consume_api(Api_routes.get_classroomYears, {}, token);
     const response = await request.get_petitions();
     if(response["msm"]){
       const warning = new notify(response["msm"]);
@@ -81,7 +81,7 @@ export default function Classroom(){
 
   const get_classrooms = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/classroom/get-classrooms/1/${atob(year)}`, {}, token);
+    const request = new consume_api(`${Api_routes.get_classroom}${atob(year)}`, {}, token);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
@@ -151,7 +151,7 @@ export function Select_clist(){
       navigate("/Classroms");
       return
     }
-    const request = new consume_api(`/classroom/get-clist/${search_id}`, {}, stateSessionToken)
+    const request = new consume_api(`${Api_routes.get_classroomList}${search_id}`, {}, stateSessionToken)
     const data = await request.get_petitions(); 
     if(data["msm"] === "Authorization"){
       return;
@@ -244,7 +244,7 @@ export function Get_clist(){
 
   const get_cStudents = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/classroom/get-all-unit-student/${search_id}/${atob(clist_number)}`, {}, stateSessionToken);
+    const request = new consume_api(`${Api_routes.get_classroomListStudent}${search_id}/${atob(clist_number)}`, {}, stateSessionToken);
     const data = await request.get_petitions();
     if(data["msm"]){
       setC_student([]);

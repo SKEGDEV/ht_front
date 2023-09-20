@@ -4,7 +4,7 @@ import { navigation_Actions } from "../../actions/navigationActions";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import { id_Action } from "../../actions/id_actions";
 import { useEffect, useState } from "react";
-import { consume_api } from "../../utils/consume_api";
+import { consume_api, Api_routes } from "../../utils/consume_api";
 import {HiClipboardCheck} from 'react-icons/hi';
 import {CgMathMinus,CgMathPlus} from 'react-icons/cg';
 import styles from './activities.module.scss';
@@ -19,7 +19,7 @@ export default function Activities(){
 
   const get_crooms = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/classroom/get-classrooms/1/${atob(year)}`, {}, stateSessionToken);
+    const request = new consume_api(`${Api_routes.get_classroom}${atob(year)}`, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
@@ -77,7 +77,7 @@ export function Get_activities(){
     dispatch(lock_uiAction({action:1, value:true}));
     const last_id = localStorage.getItem("code");
     var url = ""
-    last_id != "" ? url=`/activity/get-activities/${last_id}/${atob(u_number)}`:url=`/activity/get-activities/${search_id}/${atob(u_number)}` 
+    last_id != "" ? url=`${Api_routes.get_activities}${last_id}/${atob(u_number)}`:url=`${Api_routes.get_activities}${search_id}/${atob(u_number)}` 
     last_id != "" ? dispatch(id_Action(last_id)):dispatch(id_Action(search_id));
     const request = new consume_api(url, {}, stateSessionToken);
     const response = await request.get_petitions();
@@ -140,7 +140,7 @@ export function Get_sActivities(){
       return;
     }
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/activity/get-activity-students/${search_id}`, {}, stateSessionToken);
+    const request = new consume_api(`${Api_routes.get_studentActivities}${search_id}`, {}, stateSessionToken);
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));

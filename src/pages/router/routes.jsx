@@ -14,7 +14,7 @@ import Not_session from "../not_found/off_session.jsx";
 import Activities from "../activities/activities.jsx";
 import { Get_activities, Get_sActivities } from "../activities/activities.jsx";
 import { Qualified, Create_activity } from "../activities/component.jsx";
-import Documents from "../documents/documents.jsx";
+import Documents, {Form_toReport, RptStudent} from "../documents/documents.jsx";
 import Profile from "../profile/profile.jsx";
 
 export default function Page_router() {
@@ -48,6 +48,8 @@ export default function Page_router() {
      </Route>
      <Route path="/Documents">
        <Route index element={<Navigation Component={<Documents/>}/>}/>
+       <Route path="form-to-get-rpt/:variant" element={<Navigation Component={<Form_toReport/>}/>}/>
+       <Route path="student-list-rpt" element={<Navigation Component={<RptStudent/>}/>}/>
      </Route>
      <Route path="/Profile">
        <Route index element={<Navigation Component={<Profile/>}/>}/>

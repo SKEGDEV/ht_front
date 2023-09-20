@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Button from "../../components/button/button";
 import Input from "../../components/input/input";
 import Select from "../../components/select/select";
-import { consume_api } from "../../utils/consume_api";
+import { consume_api, Api_routes } from "../../utils/consume_api";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import {AiFillCloseCircle, AiFillCheckCircle} from "react-icons/ai";
 import {MdCancel, MdSave} from 'react-icons/md';
@@ -23,7 +23,7 @@ export function Qualified(){
 
   const get_info = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api(`/activity/get-student-information/${atob(student)}`, {}, stateSessionToken)
+    const request = new consume_api(`${Api_routes.get_studentActivityInfo}${atob(student)}`, {}, stateSessionToken)
     const response = await request.get_petitions();
     if(response["msm"]){
       setStudent_info([]);
@@ -53,7 +53,7 @@ export function Qualified(){
       s_points:student_points,
       a_points:activity_points
     }
-    const request = new consume_api(`/activity/qualified-activity`, params, stateSessionToken);
+    const request = new consume_api(Api_routes.put_qualifiedActivity, params, stateSessionToken);
     const response = await request.put_petitions();
     if(response["isValid"]){
       dispatch(lock_uiAction({action:1, value:false}));
@@ -147,7 +147,7 @@ export function Create_activity(){
   
   const create_activity = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
-    const request = new consume_api("/activity/create-activity", params, stateSessionToken);
+    const request = new consume_api(Api_routes.post_createActivity, params, stateSessionToken);
     const response = await request.post_petitions();
     if(response["isMax"]){
       const warning_alert = new notify(response["msm"]);
@@ -187,8 +187,8 @@ export function Create_activity(){
   }
 
   const get_catalogs = async()=>{
-    const type_request = new consume_api("/catalogs/get-catalog/4/0",{},"");
-    const subtype_request = new consume_api("/catalogs/get-catalog/5/0",{},"");
+    const type_request = new consume_api(Api_routes.get_activityTypeCatalog,{},"");
+    const subtype_request = new consume_api(Api_routes.get_activitySubTypeCatalog,{},"");
     const type = await type_request.get_petitions();
     const subtype = await subtype_request.get_petitions();
     if(type["msm"] && subtype["msm"]){
