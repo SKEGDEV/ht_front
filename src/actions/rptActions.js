@@ -14,7 +14,12 @@ export const rptActions = state =>{
       }
     case 3:
       return{
-	type:'ACTION_OPEN_CLOSE_MODAL',
+	type:'ACTION_OPEN_CLOSE_MODAL_RPT',
+	payload:item
+      }
+    case 4:
+      return{
+	type:'ACTION_UPLOAD_RPT_CT_AP',
 	payload:item
       }
   }

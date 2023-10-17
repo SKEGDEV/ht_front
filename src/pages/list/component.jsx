@@ -4,6 +4,7 @@ import Input from '../../components/input/input';
 import Button from '../../components/button/button';
 import Select from '../../components/select/select';
 import {MdCancel, MdSkipNext, MdAddCircle, MdSave, MdDelete, MdUpdate} from 'react-icons/md';
+import {FaUserEdit,FaUserPlus} from 'react-icons/fa';
 import {IoIosSkipBackward} from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../../utils/notify';
@@ -313,7 +314,7 @@ export function Create_list(){
 export function Add_update_student(){ 
   const {list_id, s_id} = useParams();
   const {stateSessionToken} = useSelector(state=> state.session);
-  const {container, container_btn, c_rigth, c_left, inputs} = styles
+  const {container, container_btn, c_rigth, c_left, inputs, identifier} = styles
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [params, setParams] = useState({
@@ -421,6 +422,9 @@ export function Add_update_student(){
   return(
     <div className={container}>
     <div className={inputs}>
+     <div className={identifier}>
+       <h4>{atob(s_id)!=0 ? `Actualizar informacion ` : `Agregar nuevo estudiante `} {atob(s_id) != 0 ? <FaUserEdit/> : <FaUserPlus/>} </h4>
+     </div>
       <Input
        type="text"
        lblText="Nombres*"

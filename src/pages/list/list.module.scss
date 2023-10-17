@@ -241,8 +241,7 @@ $btn_warning: #ffc340;
   overflow: hidden;
   margin: 0 0 220px 2.5%;
   transform: translateY(120px);
-  padding-top: 45px;
-   .container_btn{
+  .container_btn{
     width: 100%;
     margin-bottom: 40px;
     display: flex;
@@ -254,6 +253,21 @@ $btn_warning: #ffc340;
     .c_rigth{
       width: 40%;
       margin-left: 10%;
+    }
+  }
+  .identifier{
+    width: 60%;
+    background-color: $btn_bg;
+    margin-bottom: 45px;
+    margin-left: -10px;
+    padding: 20px 0 20px 0;
+    text-align: center;
+    h4{
+      color: white;
+      font-size: 20px;
+    }
+    svg{
+      transform: translateY(4px);
     }
   }
 }
@@ -309,6 +323,12 @@ $btn_warning: #ffc340;
       @include frm_base();
       display: flex;
       flex-direction: column;
+      p{
+	width: 100%;
+	text-align: center;
+	margin-bottom: 20px;
+	color: gray;
+      }
       a{
 	text-decoration: none;
 	color: black;
@@ -338,6 +358,7 @@ $btn_warning: #ffc340;
 	  //box-shadow: 0 0 5px 5px rgba($color: #000000, $alpha: 0.2);
 	  border: .5px solid;
 	  margin-bottom:10px;
+	  margin-left: 10px;
 	  border-radius: 5px;
 	  text-align: center;
 	  h4{
@@ -397,4 +418,32 @@ $btn_warning: #ffc340;
 
 .inputsC{
   width: 99%;
+}
+
+@media only screen and (min-width:900px){
+  .list{
+    width: 60%;
+    margin-left: 20%;
+  }
+  .frm_container{
+    width: 60%;
+    margin-left: 20%;
+  } 
+  .container, .create_container{
+    width: 40%;
+    margin-left: 30%;
+    box-shadow: 0 0 10px 10px rgba($color: #000000, $alpha: 0.2);
+    transform: translateY(140px);
+    margin-bottom: 260px;
+    border-radius: 10px;
+    select{
+      margin-left: 10px;
+    }
+  }
+  .inputs{
+    margin: 0 0 0 1.5%;
+  }
+  .inputsC{
+    margin-left: 1.5%;
+  }
 }

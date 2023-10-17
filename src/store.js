@@ -8,7 +8,12 @@ const {composeWithDevTools} = require("redux-devtools-extension");
 const persistConfig ={
   key:"root",
   debug:true,
-  storage
+  storage,
+  blacklist:[
+    'lock_ui',
+    'rpt',
+    'filter'
+  ]
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

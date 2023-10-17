@@ -11,10 +11,12 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { lock_uiAction } from '../../actions/lock_uiActions';
 import { navigation_Actions } from '../../actions/navigationActions';
+import { search_Actions } from '../../actions/search';
+import Chart from 'react-google-charts';
 
 export default function List(){
   const token = useSelector(state=>state.session.stateSessionToken);
-  const [params, setParams] = useState([]);
+  const {filter} = useSelector(state => state)
   const {list} = styles;
   const dispatch = useDispatch();
 
@@ -23,12 +25,12 @@ export default function List(){
     const request = new consume_api(Api_routes.get_allList, {}, token);
     const response = await request.get_petitions();
     if(response["msm"]){
-      setParams([]);
+      dispatch(search_Actions({variant:2, item:{item:[],index:1}}));
       dispatch(lock_uiAction({action:1,value:false}));
       return;
-    }
-    setParams(response);
-    setTimeout(()=>{dispatch(lock_uiAction({action:1,value:false}));},1000)
+    } 
+    dispatch(search_Actions({variant:2, item:{item:response,index:1}}));
+    setTimeout(()=>{dispatch(lock_uiAction({action:1,value:false}));},500);
   }
   
   useEffect(()=>{
@@ -38,7 +40,7 @@ export default function List(){
 
   return(
     <div className={list}>
-     {params.map((d, index)=>( 
+     {filter.o_filter.map((d, index)=>( 
      <List_item id={d[0]} key={d[0]} name={d[1]} date={new Date(d[2]).toLocaleDateString()} l_status={d[3]} number={index+1}/> 
      ))}
     </div>
@@ -70,21 +72,20 @@ export function Get_list_student(){
   const {list_id} = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {session:{stateSessionToken}} = useSelector(state => state);
+  const {session:{stateSessionToken}, filter} = useSelector(state => state);
   const {list, student_item, indexl, student_info, student_btn, warning, primary} = styles;
-  const [student, setStudent] = useState([]);
 
   const get_student = async ()=>{
     dispatch(lock_uiAction({action:1, value:true}));
     const request = new consume_api(`${Api_routes.get_allStudentOffList}${atob(list_id)}`,{},stateSessionToken);
     const response = await request.get_petitions();
-    if(response['msm']){
-      setStudent([]);
+    if(response['msm']){ 
+      dispatch(search_Actions({variant:2, item:{item:[],index:1}}));
       dispatch(lock_uiAction({action:1, value:false}));
       navigate('/Lists');
       return;
     }
-    setStudent(response);
+    dispatch(search_Actions({variant:2, item:{item:response,index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
   }
 
@@ -95,7 +96,7 @@ export function Get_list_student(){
 
   return(
     <div className={list}>
-    {student.map((d, index)=>(
+    {filter.o_filter.map((d, index)=>(
       <div key={d[0]} className={student_item}>
         <div className={indexl}>
           <h4>{index+1}</h4>
@@ -196,9 +197,15 @@ export function Get_studentFile(){
       <div className={frm_body}>
         <div className={frm_body_contact}>
          <div className={frm_label}><span>{`INFORMACION DE CONTACTO `}</span><MdPhoneInTalk/></div>
-          <a href={`tel:${d[6] || d[6]!==""? d[6]: '+50200000000'}`}>{`Numero telefonico de la madre: ${d[6] || d[6]!==""? d[6]: 'No registrado'}`}</a>
-          <a href={`tel:${d[7] || d[7]!==""? d[7]: '+50200000000'}`}>{`Numero telefonico del padre: ${d[7] || d[7]!==""? d[7]: 'No registrado'}`}</a>
-          <a href={`tel:${d[8] || d[8]!==""? d[8]: '+50200000000'}`}>{`Numero telefonico extra: ${d[8] || d[8]!==""? d[8]: 'No registrado'}`}</a>
+          {d[6] === "+50200000000" ? <p>Numero telefonico de la madre no disponible</p>:
+          <a  href={`tel:${d[6]}`}>{`Numero telefonico de la madre: ${d[6]}`}</a>
+	  }
+          {d[7] === "+50200000000" ? <p>Numero telefonico del padre no disponible</p>:
+          <a  href={`tel:${d[7]}`}>{`Numero telefonico del padre: ${d[7]}`}</a>
+	  }
+          {d[7] === "+50200000000" ? <p>Numero telefonico extra no disponible</p>:
+          <a  href={`tel:${d[8]}`}>{`Numero telefonico extra: ${d[8]}`}</a>
+	  }
         </div>
     
         <div className={frm_body_container}>
@@ -245,15 +252,32 @@ function Component_SActivities(props){
   const {o_activities=[], list_id=""} = props;
   const navigate = useNavigate();
   const {frm_fotter_container, frm_footer_information}= styles;
+  const [oData, setOData] = useState([]);
+  const options = {
+    title: "Actividades asignadas al estudiante"
+  }
 
+  useEffect(()=>{
+    o_activities.map(d=>{
+      setOData([
+	["Task", ""],
+	["Tareas entregadas", d[0]],
+	["Tareas no entregadas", d[1]]
+      ])
+    });
+  },[o_activities])
   return(
-    <div className={frm_fotter_container}>
-    {o_activities.map(d=>(
-     <div key={d[0]} className={frm_footer_information}>
-      <h4>{`Cantidad de tareas completadas: ${d[1]} de un total de tareas asignadas: ${d[0]}`}</h4>
+    <div className={frm_fotter_container}> 
+     <div className={frm_footer_information}>
+      <Chart
+       chartType='PieChart'
+       data={oData}
+       options={options}
+       width={"100%"}
+       height={"400px"}
+     />
       <p>{`Si desea saber mas del asunto por favor dirijase al apartado de rendimiento por unidad del estudiante`}</p>
-     </div>
-    ))}
+     </div> 
     <Button 
     Icon={IoIosSkipBackward}
     text="Regresar"

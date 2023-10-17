@@ -3,7 +3,8 @@ import Input from '../../components/input/input';
 import Select from '../../components/select/select';
 import { useState, useEffect } from 'react';
 import { consume_api, Api_routes} from '../../utils/consume_api';
-import {MdCancel, MdSave, MdAddCircle} from 'react-icons/md';
+import {MdCancel, MdSave, MdAddCircle,MdCreateNewFolder} from 'react-icons/md';
+import {FaFileUpload} from 'react-icons/fa';
 import Button from '../../components/button/button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +18,7 @@ export function Create_classroom(){
     "class_name":"",
     "type":0
   });
-  const {create_container, input_container, l_create, r_create, create_btn, inputs} = styles;
+  const {create_container, input_container, l_create, r_create, create_btn, inputs, identifier} = styles;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector(state=>state.session.stateSessionToken);
@@ -86,6 +87,9 @@ export function Create_classroom(){
 
   return(
     <div className={create_container}>
+    <div className={identifier}>
+      <h4>{`Crear curso `} <MdCreateNewFolder/></h4>
+    </div>
     <div className={input_container}>
     <div className={inputs}>
      <Input
@@ -131,7 +135,7 @@ export function Create_classroom(){
 export function Upload_listing(){
   const [lists, setLists] = useState([]);
   const [list_id, setList_id] = useState(0);
-  const {create_container, l_create, r_create, create_btn} = styles;
+  const {create_container, l_create, r_create, create_btn, identifier} = styles;
   const {session:{stateSessionToken}, search_id:{search_id}} = useSelector(state=>state);
   const navigate =useNavigate();
   const dispatch = useDispatch();
@@ -197,6 +201,9 @@ export function Upload_listing(){
 
   return(
     <div className={create_container}>
+    <div className={identifier}>
+      <h4>{`Cargar listado al curso `} <FaFileUpload/></h4>
+    </div>
     <Select
      msm=" el listado que desea agregar"
      options={lists}

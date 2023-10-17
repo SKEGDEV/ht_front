@@ -136,6 +136,7 @@ export const Api_routes = {
   get_classroomTypeCatalog:'/catalogs/get-catalog/3/0',
   get_createAccountCountryCatalog:'/catalogs/get-catalog/1/0',
   get_createAccountDocumentCatalog:'/catalogs/get-catalog/2/',
+  get_clist_for_list:'/catalogs/get-catalog/9/',
 
   //SessionRoutes
   get_verifySession:'/auth/verify-session',

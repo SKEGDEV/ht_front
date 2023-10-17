@@ -3,20 +3,22 @@ import { navigation_Actions } from "../../actions/navigationActions";
 import { useEffect, useState } from "react";
 import { consume_api, Api_routes } from "../../utils/consume_api";
 import styles from './classroom.module.scss';
-import {MdFormatListBulletedAdd, MdCancel,MdCheckBox, MdLocalPrintshop, MdQueryStats, MdDoubleArrow} from 'react-icons/md'
+import {MdFormatListBulletedAdd, MdCancel,MdCheckBox, MdQueryStats, MdDoubleArrow} from 'react-icons/md'
+import {BiSelectMultiple} from 'react-icons/bi'
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import { id_Action } from "../../actions/id_actions";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/button/button";
 import Select from "../../components/select/select";
 import {notify} from "../../utils/notify";
+import { search_Actions } from "../../actions/search";
 
 
 export function Classroom_year(){
   const token = useSelector(state=>state.session.stateSessionToken); 
+  const {filter} = useSelector(state=>state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [Years, setYears] = useState([]);
   const {classroom_container, classroom_item, l_item, r_item} = styles;
 
   const get_year = async ()=>{
@@ -27,10 +29,10 @@ export function Classroom_year(){
       const warning = new notify(response["msm"]);
       warning.warning();
       dispatch(lock_uiAction({action:1, value:false}));
-      setYears([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:0}}));
       return;
     }
-    setYears(response);
+    dispatch(search_Actions({variant:2, item:{item:response, index:0}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},250);
   }
 
@@ -51,7 +53,7 @@ export function Classroom_year(){
 
   return(
     <div className={classroom_container}>
-    {Years.map((d, index)=>
+    {filter.o_filter.map((d, index)=>
       <div className={classroom_item} key={index}>
         <div className={l_item}>
           <h4>{`Cursos para el año: ${d[0]}`}</h4>
@@ -68,8 +70,8 @@ export function Classroom_year(){
 export default function Classroom(){
   const dispatch = useDispatch();
   const token = useSelector(state=>state.session.stateSessionToken);
+  const {filter} = useSelector(state=>state);
   const navigate = useNavigate();
-  const [classroom, setClassroom] = useState([]);
   const {classroom_container,
 	 classroom_item,
 	 l_item,
@@ -85,10 +87,10 @@ export default function Classroom(){
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
-      setClassroom([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:1}}));
       return;
     }
-    setClassroom(response);
+    dispatch(search_Actions({variant:2, item:{item:response, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 1000);
   }
 
@@ -109,7 +111,7 @@ export default function Classroom(){
 
   return(
     <div className={classroom_container}>
-    {classroom.map(d=>(
+    {filter.o_filter.map(d=>(
      <div key={d[0]} className={classroom_item}>
       <div className={l_item}>
        <div className={item_top}>
@@ -200,9 +202,12 @@ export function Select_clist(){
     localStorage.setItem("code","");
   },[]);
 
-  const {create_container, create_btn, l_create, r_create} = styles;
+  const {create_container, create_btn, l_create, r_create, identifier} = styles;
   return(
     <div className={create_container} >
+     <div className={identifier}>
+       <h4>{`Seleccionar listado `} <BiSelectMultiple/></h4>
+     </div>
       <Select
        msm=" el listado deseado"
        options={clist}
@@ -235,23 +240,22 @@ export function Select_clist(){
 }
 
 export function Get_clist(){
-  const {search_id:{search_id}, session:{stateSessionToken}} = useSelector(state => state);
+  const {search_id:{search_id}, session:{stateSessionToken}, filter:{o_filter}} = useSelector(state => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {classroom_container, clist_item, clist_btn, clsit_info}=styles
+  const {classroom_container, clist_item, clist_btn, clsit_info, identifier}=styles
   const {clist_number} = useParams();
-  const [c_studnet, setC_student] = useState([]);
 
   const get_cStudents = async()=>{
     dispatch(lock_uiAction({action:1, value:true}));
     const request = new consume_api(`${Api_routes.get_classroomListStudent}${search_id}/${atob(clist_number)}`, {}, stateSessionToken);
     const data = await request.get_petitions();
     if(data["msm"]){
-      setC_student([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:1}}));
       dispatch(lock_uiAction({action:1, value:false}));
       return;
     }
-    setC_student(data);
+    dispatch(search_Actions({variant:2, item:{item:data, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);
   }
 
@@ -261,7 +265,7 @@ export function Get_clist(){
 
   return(
     <div className={classroom_container}> 
-     {c_studnet.map(d=>(
+     {o_filter.map(d=>(
       <div key={d[0]} className={clist_item}>
        <div className={clsit_info}>
          <p>{`Nombre completo: ${d[1]}`}</p>
@@ -270,10 +274,6 @@ export function Get_clist(){
          <p>{`Calificacion acumulada: ${d[6]} PTS`}</p>
        </div>
        <div className={clist_btn}>
-         <Button
-           Icon={MdLocalPrintshop}
-           text="Calificaciones"
-         />
          <Button
            Icon={MdQueryStats}
            text="Rendimiento"

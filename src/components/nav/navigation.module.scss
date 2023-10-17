@@ -64,6 +64,9 @@ $nav_bg: #107acc;
 
 .hide{
   display: none;
+  &::after{
+    display: none;
+  }
 }
 
 .principal{
@@ -122,4 +125,21 @@ $nav_bg: #107acc;
       color: $nav_bg;
     }
    }
+}
+
+@media only screen and (min-width:900px){
+  .principal{
+    .navigation{
+
+      button{
+	flex-direction: row;
+	font-size: 18px;
+	justify-content: center;
+	padding: 0;
+	span{
+	  margin-left: 8px;
+	}
+      }
+    }
+  }
 }

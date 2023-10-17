@@ -96,8 +96,7 @@ $success: #5ccb5f;
   height: 100%;
   overflow: hidden;
   margin: 0 0 220px 2.5%;
-  transform: translateY(120px);
-  padding-top: 45px;
+  transform: translateY(120px); 
   .input_container{
     width: 96%; 
   }
@@ -115,7 +114,21 @@ $success: #5ccb5f;
       margin-left: 10%;
     }
   }
-  
+   .identifier{
+    width: 60%;
+    background-color: $btn_bg;
+    margin-bottom: 45px;
+    margin-left: -10px;
+    padding: 20px 0 20px 0;
+    text-align: center;
+    h4{
+      color: white;
+      font-size: 20px;
+    }
+    svg{
+      transform: translateY(4px);
+    }
+  } 
 }
 
 .clist_item{
@@ -140,8 +153,10 @@ $success: #5ccb5f;
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: 100%;
       span{
 	font-size: 11px;
+	margin-top: 20px;
       }
     }
   }
@@ -150,3 +165,41 @@ $success: #5ccb5f;
 .inputs{
   width: 99%;
 }
+@media only screen and (min-width:900px){
+  .classroom_container{
+    width: 60%;
+    margin-left: 20%;
+    .identifier{
+      width: 60%;
+      background-color: $btn_bg;
+      margin-bottom: 45px;
+      margin-left: -10px;
+      padding: 20px 0 20px 0;
+      text-align: center;
+      h4{
+	color: white;
+	font-size: 20px;
+      }
+    svg{
+      transform: translateY(4px);
+    }
+  } 
+  }
+  .create_container{
+    width: 40%;
+    margin-left: 30%;
+    box-shadow: 0 0 10px 10px rgba($color: #000000, $alpha: 0.2);
+    transform: translateY(140px);
+    margin-bottom: 260px;
+    border-radius: 10px;
+    padding-bottom: 40px;
+    select{
+      margin-left: 0.5%;
+    }
+  }
+  .inputs{
+    width: 100%;
+    margin-left: 1%;
+  }
+}
+

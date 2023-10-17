@@ -9,9 +9,10 @@ import { lock_uiAction } from '../../actions/lock_uiActions';
 import { consume_api, Api_routes } from '../../utils/consume_api';
 import { notify } from '../../utils/notify';
 import {BsClipboard2PulseFill, BsClipboard2Fill, BsFileTextFill, BsPersonBadgeFill} from 'react-icons/bs';
-import {MdCancel, MdSkipNext} from 'react-icons/md';
 import {FaFilePdf} from 'react-icons/fa';
+import {MdCancel, MdSkipNext,MdPictureAsPdf} from 'react-icons/md';
 import { rptActions } from '../../actions/rptActions';
+import { search_Actions } from '../../actions/search';
 
 export default function Documents(){
   const {container, card_container, card} = styles;
@@ -40,7 +41,7 @@ export default function Documents(){
          <p>  
            Aca puedes generar el formato de lista de cotejo para cada uno de tus listados inscritos en los cursos del año en curso.
          </p>
-         <button onClick={()=>{navigate(`/Classroms`);}}>Ir a</button>
+         <button onClick={()=>{navigate(`/Documents/form-to-get-rpt/${btoa("ct")}`);}}>Ir a</button>
        </div>
        <div className={card}>
          <h4>Cuadro de apreciacion</h4>
@@ -48,16 +49,7 @@ export default function Documents(){
          <p>
            Aca puedes generar el formato de cuadro de apreciacion para cada uno de tus listados inscritos en los cursos del año en curso.
          </p>
-         <button onClick={()=>{navigate(`/Activities`);}}>Ir a</button>
-       </div>
-       <div className={card}>
-         <h4>Ficha de alumno</h4>
-         <BsPersonBadgeFill/>
-         <p>
-           Esta seccion te permite generar una ficha para cada uno de tus alumnos, en donde se detalla informacion de las actividades que el estudiante
-           ha entregado y su rendimiento en las mismas.
-         </p>
-         <button onClick={()=>{navigate(`/Documents`);}}>Ir a</button>
+         <button onClick={()=>{navigate(`/Documents/form-to-get-rpt/${btoa("ap")}`);}}>Ir a</button>
        </div>
      </div>
     </div>
@@ -70,22 +62,42 @@ export function Form_toReport(){
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {variant} = useParams();
-  const {form_container, form_btn, l_btn, r_btn} = styles;
+  const {form_container, form_btn, l_btn, r_btn, identifier} = styles;
   const [params, setParams] = useState({
     year:0,
     listId:0,
-    type:atob(variant)
+    type:atob(variant),
+    clistId:0,
+    unit_number:0
   });
   const [catalogs, setCatalogs] = useState({
     yearCatalog: [],
-    listCatalog: []
+    listCatalog: [],
+    clistCatalog: [],
+    isClistVisible: false,
   });
 
-  const onChangeParams = (name, value)=>{
+  const onChangeParams = async (name, value)=>{
     setParams({
       ...params,
       [name]:value
     });
+
+    if(name === "listId" && (atob(variant) === "ct") || atob(variant) === "ap"){
+      dispatch(lock_uiAction({action:1, value:true}));
+      const request = new consume_api(`${Api_routes.get_clist_for_list}${value}`,{},"");
+      const response = await request.get_petitions();
+      if(response["msm"]){
+	const warning = new notify(response["msm"]); 
+	warning.warning();
+	return
+      }
+      setCatalogs({
+	...catalogs,
+	clistCatalog:response
+      });
+      setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 250);
+    }
   }
 
   const get_catalogs = async ()=>{
@@ -111,21 +123,50 @@ export function Form_toReport(){
   }
 
   const Go_toRpt = ()=>{
-    if(params.listId < 1 || params.year < 1){
-      const notValidNotify = new notify('Por favor seleccione el año, y el listado a utilizar');
-      notValidNotify.warning();
-      return;
+    if(atob(variant) === "qa" || atob(variant) === "rs"){
+      if(params.listId < 1 || params.year < 1){
+	const notValidNotify = new notify('Por favor seleccione el año, y el listado a utilizar');
+	notValidNotify.warning();
+	return;
+      }
+
+      dispatch(rptActions({type:1, item:params}));
+      navigate('/Documents/student-list-rpt');
+    }else{
+      if((params.clistId < 1 || params.year < 1 || params.listId < 1 || params.unit_number < 1) && atob(variant) === 'ct'){
+	const notValidNotify = new notify('Por favor seleccione el año, listado, curso y unidad a utilizar');
+	notValidNotify.warning();
+	return;
+      }
+      if((params.clistId < 1 || params.year < 1 || params.listId < 1) && atob(variant) === 'ap'){
+	const notValidNotify = new notify('Por favor seleccione el año, listado y curso a utilizar');
+	notValidNotify.warning();
+	return;
+      }
+      dispatch(rptActions({type:4, item:params}));
     }
-    dispatch(rptActions({type:1, item:params}));
-    navigate('/Documents/student-list-rpt');
   }
 
   useEffect(()=>{
     get_catalogs();
+    atob(variant) === "ct" ? setParams({
+      ...params,
+      isClistVisible:true
+    }) : atob(variant) === "ap" ? setParams({
+      ...params,
+      isClistVisible:true
+    }) : setParams({
+      ...params,
+      isClistVisible:false
+    });
   },[]);
 
   return(
     <div className={form_container}>
+    <div className={identifier}>
+      <h4>{atob(variant) == "ct" ? `Generar Reporte Listado de Cotejo ` :
+	   atob(variant) == "ap" ? `Generar Reporte Cuadro de apreciacion ` : `Formulario de reportes `}<MdPictureAsPdf/></h4>
+    </div>
       <Select
        options={catalogs.yearCatalog}
        option_i={0}
@@ -141,6 +182,24 @@ export function Form_toReport(){
        get_value={onChangeParams}
        name='listId'
       />
+     {params.isClistVisible ? 
+      <Select
+       options={catalogs.clistCatalog}
+       msm={' el curso a buscar'}
+       set_value={params.clistId}
+       get_value={onChangeParams}
+       name='clistId'
+      />
+      : <></>}
+      {atob(variant) === "ct" ? 
+          <Select
+	    options={[[1,'I BLOQUE'], [2, 'II BLOQUE'], [3, 'III BLOQUE'], [4, 'IV BLOQUE']]}
+	    msm={' la unidad a buscar'}
+	    set_value={params.unit_number}
+	    get_value={onChangeParams}
+	    name='unit_number'
+	  />
+	  : <></>}
       <div className={form_btn}>
         <div className={l_btn}>
           <Button
@@ -152,8 +211,10 @@ export function Form_toReport(){
         </div>
         <div className={r_btn}>
           <Button
-           Icon={MdSkipNext}
-           text="Siguiente"
+           Icon={atob(variant) == "ct" ? FaFilePdf :
+	         atob(variant) == "ap" ? FaFilePdf : MdSkipNext}
+           text={atob(variant) == "ct" ? "Generar PDF" : 
+	         atob(variant) == "ap" ? "Generar PDF" : "Siguiente"}
            type="success"
            press_btn={Go_toRpt}
           />
@@ -166,8 +227,7 @@ export function Form_toReport(){
 export function RptStudent (){
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {rpt, session} = useSelector(state => state)
-  const [oList, setOList] = useState([]);
+  const {rpt, session, filter} = useSelector(state => state)
   const {s_container, s_item, item_l, item_r} = styles;
 
   const Get_students = async ()=>{
@@ -186,7 +246,7 @@ export function RptStudent (){
       navigate('/Documents');
       return;
     }
-    setOList(o_Student);
+    dispatch(search_Actions({variant:2, item:{item:o_Student, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500)
   }
 
@@ -201,10 +261,11 @@ export function RptStudent (){
 
   useEffect(()=>{
     Get_students();
+    dispatch(navigation_Actions(14));
   },[])
   return(
-    <div className={s_container}>
-    {oList.map((d, index)=>(
+    <div className={s_container}> 
+    {filter.o_filter.map((d, index)=>(
       <div key={index} className={s_item}>
         <div className={item_l}>
           <h4>{d[1]}</h4>

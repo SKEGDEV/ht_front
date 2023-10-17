@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { navigation_Actions } from "../../actions/navigationActions";
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import { id_Action } from "../../actions/id_actions";
+import { search_Actions } from "../../actions/search";
 import { useEffect, useState } from "react";
 import { consume_api, Api_routes } from "../../utils/consume_api";
 import {HiClipboardCheck} from 'react-icons/hi';
@@ -10,10 +11,9 @@ import {CgMathMinus,CgMathPlus} from 'react-icons/cg';
 import styles from './activities.module.scss';
 
 export default function Activities(){
-  const [crooms, setCrooms] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {session:{stateSessionToken}} = useSelector(state=>state);
+  const {session:{stateSessionToken}, filter:{o_filter}} = useSelector(state=>state);
   const {crom_container, crom_item, i_top, i_bottom} = styles;
   const {year} = useParams();
 
@@ -23,10 +23,10 @@ export default function Activities(){
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
-      setCrooms([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:1}}));
       return;
     }
-    setCrooms(response);
+    dispatch(search_Actions({variant:2, item:{item:response, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}));},500);
   }
 
@@ -42,7 +42,7 @@ export default function Activities(){
   },[])
   return(
     <div className={crom_container}>
-    {crooms.map(d=>(
+    {o_filter.map(d=>(
      <div key={d[0]} className={crom_item}>
        <div className={i_top}>
          <h4>{d[1]}</h4>
@@ -67,8 +67,7 @@ export default function Activities(){
 
 export function Get_activities(){
   const {u_number} = useParams();
-  const {session:{stateSessionToken}, search_id:{search_id}} = useSelector(state=>state);
-  const [activities, setActivities] = useState([]);
+  const {session:{stateSessionToken}, search_id:{search_id}, filter:{o_filter}} = useSelector(state=>state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {crom_container, activity_item, a_left, a_right} = styles;
@@ -83,10 +82,10 @@ export function Get_activities(){
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
-      setActivities([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:1}}));
       return;
     }
-    setActivities(response);
+    dispatch(search_Actions({variant:2, item:{item:response, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 500);
     localStorage.setItem("code", "");
   }
@@ -105,14 +104,13 @@ export function Get_activities(){
 
   return(
     <div className={crom_container}>
-    {activities.map(d=>(
+    {o_filter.map(d=>(
      <div key={d[0]} className={activity_item}>
        <div className={a_left}>
          <p>{`Nombre actividad: ${d[1]}`}</p>
          <p>{`Creada el dia: ${new Date(d[2]).toLocaleDateString()}`}</p>
          <p>{`Puntuacion: ${d[3]}`}</p>
-         <p>{`Tipo: ${d[4]}`}</p>
-         <p>{`Subtipo: ${d[5]}`}</p>
+         <p>{`Clasificacion: ${d[4]}`}</p>
        </div>
        <div className={a_right}>
          <button onClick={()=>{go_toAstudent(d[0], d[3]);}}>
@@ -127,11 +125,10 @@ export function Get_activities(){
 }
 
 export function Get_sActivities(){
-  const {session:{stateSessionToken}, search_id:{search_id}} = useSelector(state=>state);
+  const {session:{stateSessionToken}, search_id:{search_id}, filter:{o_filter}} = useSelector(state=>state);
   const {points} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [student, setStudent] = useState([]);
   const {crom_container, activity_item, a_left, as_right} = styles;
 
   const get_students= async ()=>{
@@ -144,10 +141,10 @@ export function Get_sActivities(){
     const response = await request.get_petitions();
     if(response["msm"]){
       dispatch(lock_uiAction({action:1, value:false}));
-      setStudent([]);
+      dispatch(search_Actions({variant:2, item:{item:[], index:1}}));
       return;
     }
-    setStudent(response);
+    dispatch(search_Actions({variant:2, item:{item:response, index:1}}));
     setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))},500);
   }
 
@@ -156,7 +153,7 @@ export function Get_sActivities(){
   },[]);  
   return(
     <div className={crom_container}>
-    {student.map(d=>(
+    {o_filter.map(d=>(
       <div key={d[0]} className={activity_item}>
         <div className={a_left}>
           <p>{`Nombre: ${d[1]}`}</p>

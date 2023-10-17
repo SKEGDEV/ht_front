@@ -16,6 +16,7 @@ import { lock_uiAction } from "../../actions/lock_uiActions";
 import { sessionUserAction } from "../../actions/sessionAction";
 import { consume_api } from "../../utils/consume_api";
 import { navigation_Actions } from "../../actions/navigationActions";
+import { search_Actions } from "../../actions/search";
 var last_functionality = 0;
 
 export default function Navigation(props) {
@@ -29,6 +30,7 @@ export default function Navigation(props) {
 	const { Component = <></>} = props;
 	const name = useSelector(state => state.session.stateName);
 	const page = useSelector(state => state.navigation.funcionality);
+	const {isActive} = useSelector(state => state.filter);
 	const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -42,6 +44,7 @@ export default function Navigation(props) {
 		hide,
 		search
 	} = styles;
+	var searchFunctionalityVisible = [12,2,3,4,8,9,10,14];
 
 	const set_funcionality = () => {
 		setHome("");
@@ -98,6 +101,10 @@ export default function Navigation(props) {
 			break;
 			case 13:
 				setLists(activate);
+				setBtn(hide);
+			break;
+			case 14:
+				setDocuments(activate);
 				setBtn(hide);
 			break;
 			default:
@@ -169,7 +176,9 @@ export default function Navigation(props) {
       last_functionality = page;
       isAuth();
     }
-  })
+    dispatch(search_Actions({variant:2, item:{item:[], index:0}}));
+    searchFunctionalityVisible.includes(page) ? dispatch(search_Actions({variant:1, item:true})): dispatch(search_Actions({variant:1, item:false}));
+  },[page])
 	return (
 		<>
 			<header className={top_var}>	
@@ -177,8 +186,8 @@ export default function Navigation(props) {
 				<div className={user_container}>
 					<p>Bienvenido: {" "+name}</p>
 				</div>
-				<div className={search}>
-				  <input type="text" placeholder="Buscar..."/>
+				<div className={`${search} ${isActive ? '':hide}`}>
+				  <input onChange={(e)=>{dispatch(search_Actions({variant:3, item:e.target.value}));}} className={`${isActive ? '':hide}`} type="text" placeholder="Buscar..."/>
 				</div>
 			</header>
 			<div className={principal}>	

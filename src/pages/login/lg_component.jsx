@@ -14,7 +14,7 @@ import {BsPersonFillAdd} from 'react-icons/bs';
 import tools from "../../utils/tools";
 
 export function Signin(){
-  const {lg_form, signup_btn} = styles; 
+  const {lg_form, signup_btn, input_container} = styles; 
   const [signin_form, setSignin_form] = useState({
     "document_type":"0",
     "country_id":"0",
@@ -29,6 +29,7 @@ export function Signin(){
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {session:{isLogged, stateSessionToken}} = useSelector(state => state);
+  const oTools = new tools();
 
   const isAuth = async()=>{
     const request = new consume_api(Api_routes.get_verifySession, {}, stateSessionToken);
@@ -109,6 +110,11 @@ export function Signin(){
       valid_msm.warning();
       return;
     }
+    if(!oTools.validateRegEx({regExp:oValidate.documentInput.expression, plainText:document_number})){
+      const documentNotValid = new notify("Por favor ingrese un numero de documento valido");
+      documentNotValid.warning();
+      return false;
+    }
     dispatch(lock_uiAction({action:1, value:true}));
     const call_signin = new consume_api(Api_routes.post_Signin, signin_form, ""); 
     const data = await call_signin.post_petitions(); 
@@ -138,6 +144,7 @@ export function Signin(){
   return(
     <> 
       <div className={lg_form}>
+     <div className={input_container}>
      <Select
        options={country}
        msm="su pais de residencia"
@@ -171,6 +178,7 @@ export function Signin(){
        get_value={set_lg_params}
        name="password"
       />
+    </div>
        <a href="#">Olvido su contraseña?</a>
       <Button
        type="signin"
@@ -187,7 +195,7 @@ export function Signin(){
 }
 
 export function Signup(){
-  const {lg_form, signin_btn} = styles;
+  const {lg_form, signin_btn, input_container} = styles;
   const [country, setCountry] = useState([]);
   const [docType, setDocType] = useState([]);
   const [params, setParams] = useState({
@@ -305,7 +313,7 @@ export function Signup(){
       documentNotValid.warning();
       return false;
     }
-    if(!oTools.validateRegEx({regExp:oValidate.emailInput.expression, plainText:email}) || !oTools({regExp:oValidate.numberInput.expression, plainText:phone})){
+    if(!oTools.validateRegEx({regExp:oValidate.emailInput.expression, plainText:email}) || !oTools.validateRegEx({regExp:oValidate.numberInput.expression, plainText:phone})){
       return false;
     }
     return true
@@ -329,7 +337,7 @@ export function Signup(){
     }
     dispatch(lock_uiAction({action:1,value:true}));
     const create_account = new consume_api(Api_routes.post_Signup, params, "");
-    const data = await create_account.post_petitions();
+    const data = await create_account.post_petitions(); 
     const {token, msm, name} = data
     if(token){
       dispatch(sessionUserAction({sessionToken:token, sessionName:name, isLogged:true})); 
@@ -368,6 +376,7 @@ export function Signup(){
 
   return(
     <div className={lg_form}>
+     <div className={input_container}>
      <Input 
        type="text"
        placeholder="Ingrese su/sus nombres"
@@ -465,6 +474,7 @@ export function Signup(){
        get_value={get_params}
        set_value={confirm_password}
      />
+    </div>
      <Button
        type="signin"
        text="Crear cuenta" 

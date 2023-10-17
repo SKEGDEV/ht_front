@@ -65,3 +65,9 @@ $ui_bg:#107acc;
     transform: rotate(220deg);
   }
 }
+
+@media only screen and (min-width:900px){
+  .loader{
+    left: 50%;
+  }
+}
