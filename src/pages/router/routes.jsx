@@ -9,7 +9,7 @@ import Classroom from "../classroom/classroom.jsx";
 import {Signin, Signup} from '../login/lg_component.jsx';
 import { Create_list, Add_update_student } from "../list/component.jsx";
 import { Create_classroom, Upload_listing } from "../classroom/component.jsx";
-import { Select_clist, Get_clist, Classroom_year } from "../classroom/classroom.jsx";
+import { Select_clist, Get_clist, Classroom_year, Get_statsStudent } from "../classroom/classroom.jsx";
 import Not_session from "../not_found/off_session.jsx";
 import Activities from "../activities/activities.jsx";
 import { Get_activities, Get_sActivities } from "../activities/activities.jsx";
@@ -37,6 +37,7 @@ export default function Page_router() {
        <Route path="upload-listing" element={<Navigation Component={<Upload_listing/>}/>}/>
        <Route path="select-clist/:clist_number/:search_type" element={<Navigation Component={<Select_clist/>}/>}/>
        <Route path="get-class-list/:clist_number" element={<Navigation Component={<Get_clist/>}/>}/>
+       <Route path="get-graph-student/:s_id/:clist_number" element={<Navigation Component={<Get_statsStudent/>}/>}/>
      </Route>
      <Route path="/Activities">
        <Route index element={<Navigation Component={<Classroom_year/>}/>} />

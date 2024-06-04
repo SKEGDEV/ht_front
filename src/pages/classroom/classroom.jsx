@@ -5,6 +5,8 @@ import { consume_api, Api_routes } from "../../utils/consume_api";
 import styles from './classroom.module.scss';
 import {MdFormatListBulletedAdd, MdCancel,MdCheckBox, MdQueryStats, MdDoubleArrow} from 'react-icons/md'
 import {BiSelectMultiple} from 'react-icons/bi'
+import {BsClipboard2CheckFill, BsClipboard2PulseFill, BsFileEarmarkBreakFill} from 'react-icons/bs'
+import {RiArrowGoBackFill} from 'react-icons/ri'
 import { lock_uiAction } from "../../actions/lock_uiActions";
 import { id_Action } from "../../actions/id_actions";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,6 +14,7 @@ import Button from "../../components/button/button";
 import Select from "../../components/select/select";
 import {notify} from "../../utils/notify";
 import { search_Actions } from "../../actions/search";
+import Chart from "react-google-charts";
 
 
 export function Classroom_year(){
@@ -243,7 +246,7 @@ export function Get_clist(){
   const {search_id:{search_id}, session:{stateSessionToken}, filter:{o_filter}} = useSelector(state => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {classroom_container, clist_item, clist_btn, clsit_info, identifier}=styles
+  const {classroom_container, clist_item, clist_btn, clsit_info}=styles
   const {clist_number} = useParams();
 
   const get_cStudents = async()=>{
@@ -277,10 +280,157 @@ export function Get_clist(){
          <Button
            Icon={MdQueryStats}
            text="Rendimiento"
+           press_btn={()=>{navigate(`/Classroms/get-graph-student/${btoa(d[0])}/${clist_number}`);}}
          />
        </div>
      </div>
      ))}
+    </div>
+  )
+}
+
+export function Get_statsStudent(){
+  const {s_id, clist_number} = useParams();
+  const {stateSessionToken} = useSelector(state => state.session);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {g_container, g_card_container, g_identifier, g_description, g_btn} = styles
+  const [graph, setGraph] = useState({
+    oActivities: [],
+    oAttitudinal: [],
+    oTest: []
+  });
+
+  const [lineOptions, setLineOptions] = useState({});
+  const [pieOptions, setPieOptions] = useState({});
+
+  const getGraphs = async ()=>{
+    dispatch(lock_uiAction({action:1, value:true}));
+    const request = new consume_api(`${Api_routes.get_studentStats}${atob(s_id)}`, {}, stateSessionToken);
+    const response = await request.get_petitions();
+    if(response["msm"]){
+      const errorAlert = new notify(response['msm']);
+      errorAlert.error();
+      dispatch(lock_uiAction({action:1, value:false}));
+      return;
+    }
+    setTimeout(()=>{dispatch(lock_uiAction({action:1, value:false}))}, 250);
+    createOGraphs(response);
+  }
+
+  const createOGraphs = (response)=>{
+    var Activities = [];
+    var Attitudinal = [];
+    var Test = [];
+
+    Activities.push(["x", "Puntos obtenidos"]);
+    Attitudinal.push(["x", "Puntos obtenidos"]);
+    Test.push(["Task", ""]);
+
+    response.oActivities.map(d => {
+      Activities.push([d[0], d[1]]);
+    });
+
+    response.oAttitudinal.map(d => {
+      Attitudinal.push([d[0], d[1]]);
+    });
+
+    response.oTest.map(d => {
+      Test.push(["Calificacion obtenida", d[0]]);
+      Test.push(["Puntos faltantes para el 100%", d[1]]);
+    });
+
+    console.log(Activities)
+    console.log(Attitudinal)
+    console.log(Test)
+
+    setGraph({
+      ...graph,
+      oActivities: Activities,
+      oAttitudinal: Attitudinal,
+      oTest: Test
+    });
+    
+    setPieOptions({
+      title: "Rendimiento durante el examen"
+    });
+
+    setLineOptions({
+      hAxis: {
+	title: "Nombre de actividades",
+      },
+      vAxis: {
+	title: "Calificacion",
+      },
+      series: {
+	1: { curveType: "function" },
+      },
+    });
+  }
+
+  useEffect(()=>{
+    getGraphs();
+  },[]);
+
+  return(
+    <div className={g_container}>
+     <div className={g_card_container}>
+       <div className={g_identifier}>
+         <h4>{`Actitud durante actividades `}<BsFileEarmarkBreakFill/></h4>
+       </div>
+       <Chart
+         chartType="LineChart"
+         width={"100%"}
+         height={"400px"}
+         data={graph.oAttitudinal}
+         options={lineOptions}
+       />
+       <div className={g_description}>
+         <p>{`En este apartado se puede apreciar las calificaciones actitudinales del estudiante, esto es a criterio del Profesor
+	    pero se puede tomar como un referente de que actitud muestra el estudiante al realizar las actividades asignadas si la grafica
+	    va en picada se pude decir que la actitud es negativa.`}</p>
+       </div>
+     </div>
+     <div className={g_card_container}>
+       <div className={g_identifier}>
+         <h4>{`Rendimiento en actividades `}<BsClipboard2PulseFill/></h4>
+       </div>
+       <Chart
+         chartType="LineChart"
+         width={"100%"}
+         height={"400px"}
+         data={graph.oActivities}
+         options={lineOptions}       
+       />
+       <div className={g_description}>
+         <p>{`En este grafico se puede apreciar las calificaciones del estudiante por actividad no relacionada con proyectos o examen de unidad,
+	     de igual forma si esta va en picada se puede decir que el esfuerzo del estudiante no es el optimo, por lo menos para esta unidad y curso`}</p>
+       </div>
+     </div>
+     <div className={g_card_container}>
+       <div className={g_identifier}>
+         <h4>{`Rendimiento en el examen `}<BsClipboard2CheckFill/></h4>
+       </div>
+       <Chart 
+         chartType="PieChart"
+         width={"100%"}
+         height={"400px"}
+         data={graph.oTest}
+         options={pieOptions}
+       />
+       <div className={g_description}>
+         <p>{`En este grafico se puede apreciar que calificacion obtuvo el estudiante con respecto al examen final de unidad y los puntos que le hicieron falta para 
+	   obtener el maximo de calificacion, si esta es menor al 60% podemos decir que el estudiante no le puso empeno al examen`}</p>
+       </div>
+     </div>
+     <div className={g_btn}>
+       <Button
+         Icon={RiArrowGoBackFill}
+         text="Regresar"
+         type="danger"
+         press_btn={()=>{navigate(`/Classroms/get-class-list/${clist_number}`);}}
+       />
+     </div>
     </div>
   )
 }

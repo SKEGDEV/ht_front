@@ -119,6 +119,7 @@ export const Api_routes = {
   get_studentActivityInfo:'/activity/get-student-information/',
   put_qualifiedActivity:'/activity/qualified-activity',
   post_createActivity:'/activity/create-activity',
+  get_studentStats: '/activity/get-student-stats-per-unit/',
 
   //StudentRoutes
   get_allList:'/student/get-all-list',
@@ -142,6 +143,9 @@ export const Api_routes = {
   get_verifySession:'/auth/verify-session',
   post_Signin:'/auth/login',
   post_Signup:'/auth/create-account',
+  get_teacher2Update:'/auth/get-teacher-information',
+  put_updateTeacher:'/auth/update-teacher-information',
+  put_updateTeacherPassword:'/auth/update-teacher-password',
 
   //rpt Routes
   post_generateReport:'/rpt/generate-report-pdf'

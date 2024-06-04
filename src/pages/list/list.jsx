@@ -232,16 +232,6 @@ function Component_SClassroom(props){
     {o_classroom.map(d=>(
       <div key={d[1]} className={frm_body_card}>
        <h4>{d[0]}</h4>
-      {d[1] != 1? 
-	<>
-	 <button>1</button>
-	</>:<>
-	 <button>1</button>
-	 <button>2</button>
-	 <button>3</button>
-	 <button>4</button>
-	</>
-      }
       </div>
     ))}
     </div>
